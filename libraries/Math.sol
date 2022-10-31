@@ -45,22 +45,22 @@ library Math {
 
     // 价格公式
     function cal_price(int B,int C, int D, int X, int Y) internal pure returns(int P){
-        P = (4 * C * X * X * Y * Y + D * D * D * X) / (4 * B * X * X * Y * Y + D * D * D * Y);
+        P = (4 * C * X * X * Y * Y + D * D * D * X) * 1e18 / (4 * B * X * X * Y * Y + D * D * D * Y);
     }
 
     // 用曲线公式求X
     function cal_X(int B, int C, int D, int Y) internal pure returns(int X){
-        X = (-(4 * C * Y * Y) + sqrt((4 * C * Y * Y)**2 - 16 * B * Y * (-D * D * D))) / (8 * B * Y);
+        X = (-(4 * C * Y * Y) + sqrt((4 * C * Y * Y)**2 - 16 * B * Y * (-D * D * D) * 1e18)) / (8 * B * Y); 
     }
 
     // 用曲线公式求Y
     function cal_Y(int B, int C, int D, int X) internal pure returns(int Y){
-        Y = (-(4 * B * X * X) + sqrt((4 * B * X * X)**2 - 16 * C * X * (-D * D * D))) / (8 * C * X);
+        Y = (-(4 * B * X * X) + sqrt((4 * B * X * X)**2 - 16 * C * X * (-D * D * D) * 1e18)) / (8 * C * X); 
     }
 
     // 用曲线公式求B
     function cal_B(int X, int Y, int D, int P) internal pure returns(int B){
-        B = (8 * X * X * Y * Y + D * D * D * X - D * D * D * Y * P) / (4 * X * X * Y * Y * (1 + P));
+        B = (8 * X * X * Y * Y * 1e36 + D * D * D * X * 1e36 - D * D * D * Y * P * 1e18) / (4 * X * X * Y * Y * (1e18 + P));
     }
 
     

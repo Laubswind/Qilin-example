@@ -18,7 +18,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Qilin test/library/Math.sol": "Math"
+			"Qilin/libraries/Math.sol": "Math"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -32,11 +32,11 @@
 		"remappings": []
 	},
 	"sources": {
-		"Qilin test/library/Math.sol": {
-			"keccak256": "0x5ebb94e628fcdee11dc345de044cd92caddefd45775e6997082f872a1595086a",
+		"Qilin/libraries/Math.sol": {
+			"keccak256": "0x31289ffbdb70c1fda49b8c49a99182ff881e16d01534d4ec3d91c037e478fe18",
 			"urls": [
-				"bzz-raw://2974740e20b4335439f2156be415e645536bb086d74516291d89154d65b4ecdc",
-				"dweb:/ipfs/QmbXHs7cL5AP3gFdoxHNuniuABikxCj57WUWWyKU76wqYj"
+				"bzz-raw://0f320e9f102e39b2ee3848d885b46d6a3d944866a20812a2647925d3db1e1ca4",
+				"dweb:/ipfs/QmcWYBQDQinsLxfST4qe8QEXXRjqxGWEFom2cUNnc7rUuN"
 			]
 		}
 	},
