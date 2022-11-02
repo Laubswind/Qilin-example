@@ -7,7 +7,7 @@ import './interface/IQilin_Callee.sol';
 import './interface/IQilin_Pool.sol';
 import './QilinERC20.sol';
 
-contract Pool {
+contract Pool is QilinERC20{
     uint256 public B;
     uint256 public C;
     uint256 public D;
@@ -52,7 +52,7 @@ contract Pool {
 
     uint256 public Total_Liquidity;
 
-    uint256 public Liquidation_rate;                //强平线
+    uint256 public Liquidation_rate;                //维持保证金率
     uint256 public Liquidation_bonus;               //清算人罚金
 
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
@@ -81,11 +81,11 @@ contract Pool {
         require(success && (data.length == 0 || abi.decode(data, (bool))), 'Qilin: TRANSFER_FAILED');
     }
 
-    function getReserves() public view returns (uint _reserveX, uint _reserveY, uint256 _blockTimestampLast) {
-        _reserveX = True_Liquid_X;
-        _reserveY = True_Liquid_Y;
-        _blockTimestampLast = block.timestamp;
-    }
+    //function getReserves() public view returns (uint _reserveX, uint _reserveY, uint256 _blockTimestampLast) {
+    //    _reserveX = True_Liquid_X;
+    //    _reserveY = True_Liquid_Y;
+    //   _blockTimestampLast = block.timestamp;
+    //}
 
     // 获取资金费率
     function Getfundingrate () public view returns(uint256 funding_x ,uint256 funding_x_8h , bool paying_side){
@@ -126,18 +126,19 @@ contract Pool {
     }
 
     // 添加流动性
-    function Add_Liquidity(uint AddX , uint AddY) external lock returns(uint Liquidity){
+    function Add_Liquidity(uint AddX , uint AddY , address to) external lock returns(uint Liquidity){
         X_Coord = X_Coord * (True_Liquid_X + AddX) / True_Liquid_X;
         Y_Coord = Y_Coord * (True_Liquid_Y + AddY) / True_Liquid_Y;
         Liquidity = Total_Liquidity * AddX / True_Liquid_X;
         Total_Liquidity = Total_Liquidity + Liquidity;
         True_Liquid_X = True_Liquid_X + AddX;
         True_Liquid_Y = True_Liquid_Y + AddY;
+        QilinERC20._mint(to, Liquidity);
         Virtual_Liquidity_Update();
     }
 
-    // 撤出流动性//
-    function Burn_Liquidity(uint Liquidity) external lock returns(uint BurX , uint BurY){
+    // 撤出流动性
+    function Burn_Liquidity(uint Liquidity , address to) external lock returns(uint BurX , uint BurY){
         BurX = Liquidity * True_Liquid_X / Total_Liquidity;
         BurY = Liquidity * True_Liquid_Y / Total_Liquidity;
         X_Coord = X_Coord * (True_Liquid_X - BurX) / True_Liquid_X;
@@ -145,11 +146,14 @@ contract Pool {
         True_Liquid_X = True_Liquid_X - BurX;
         True_Liquid_Y = True_Liquid_Y - BurY;
         Total_Liquidity = Total_Liquidity - Liquidity;
+        QilinERC20._burn(address(this), Liquidity);
+        _safeTransfer(tokenX, to, BurX);
+        _safeTransfer(tokenY, to, BurY);
         Virtual_Liquidity_Update();
     }
 
-    //现货 交易，用X买Y input为X
-    function Trade_XtoY(uint delta) internal lock returns(uint Yget) {
+    //现货/合约 交易，用X买Y input为X
+    function Trade_XtoY(uint delta, bool perp) internal lock returns(uint Yget) {
         uint deltaX = delta;
         bool check = true;
         while(check == true){
@@ -162,9 +166,12 @@ contract Pool {
 
                 Yget += (Y_Coord - Y_Coord_Test) * 1e18 / Peqy;
                 deltaX -= (X_Coord_Test - X_Coord) * 1e18 / Peqx;
-
-                True_Liquid_X += (X_Coord_Test - X_Coord) * 1e18 / Peqx;
-                True_Liquid_Y -= (Y_Coord - Y_Coord_Test) * 1e18 / Peqy;
+                if(perp == true) {
+                    Ygetp += (Y_Coord - Y_Coord_Test) * 1e18 / Peqy;
+                }else{
+                    True_Liquid_X += (X_Coord_Test - X_Coord) * 1e18 / Peqx;
+                    True_Liquid_Y -= (Y_Coord - Y_Coord_Test) * 1e18 / Peqy;
+                }
 
                 uint Peqxt = Peqx;
                 uint Peqyt = Peqy;
@@ -186,15 +193,19 @@ contract Pool {
                 X_Coord +=  deltaX * Peqx / 1e18;
                 Y_Coord = Math.cal_Y(B, C, D, X_Coord);
                 Yget += (Y_Coord_Last - Y_Coord) * 1e18 / Peqy;
-                True_Liquid_X += deltaX;
-                True_Liquid_Y -= (Y_Coord_Last - Y_Coord) * 1e18 / Peqy;
+                if(perp == true){
+                    Ygetp += (Y_Coord_Last - Y_Coord) * 1e18 / Peqy;
+                }else{
+                    True_Liquid_X += deltaX;
+                    True_Liquid_Y -= (Y_Coord_Last - Y_Coord) * 1e18 / Peqy;
+                }
                 check = false;
             }
         }
     }
 
-    //现货 交易，用X买Y，input为Y
-    function TradeXToExactY(uint delta, uint Xmax) internal lock returns(uint Xin) {
+    //现货/合约 交易，用X买Y，input为Y
+    function TradeXToExactY(uint delta, uint Xmax, bool perp) internal lock returns(uint Xin) {
         uint deltaY = delta;
         bool check = true;
         while(check == true){
@@ -207,10 +218,12 @@ contract Pool {
 
                 Xin += (X_Coord_Test - X_Coord) * 1e18 / Peqx;
                 deltaY -= (Y_Coord - Y_Coord_Test) * 1e18 / Peqy;
-
-                True_Liquid_X +=  (X_Coord_Test - X_Coord) * 1e18 / Peqx;
-                True_Liquid_Y -=  (Y_Coord - Y_Coord_Test) * 1e18 / Peqy;
-
+                if(perp == true){
+                    Ygetp += (Y_Coord - Y_Coord_Test) * 1e18 / Peqy;
+                }else{
+                    True_Liquid_X +=  (X_Coord_Test - X_Coord) * 1e18 / Peqx;
+                    True_Liquid_Y -=  (Y_Coord - Y_Coord_Test) * 1e18 / Peqy;
+                }
                 uint Peqxt = Peqx;
                 uint Peqyt = Peqy;
                 Peqy = Peqyt * Yeq / Y_Coord_Test;
@@ -231,16 +244,20 @@ contract Pool {
                 Y_Coord -= deltaY * Peqy / 1e18;
                 X_Coord = Math.cal_X(B, C, D, Y_Coord);
                 Xin += (X_Coord - X_Coord_Last) * 1e18 / Peqx;
-                True_Liquid_X += (X_Coord - X_Coord_Last) * 1e18 / Peqx;
-                True_Liquid_Y -= deltaY;
+                if(perp == true){
+                    Ygetp += deltaY;
+                }else{
+                    True_Liquid_X += (X_Coord - X_Coord_Last) * 1e18 / Peqx;
+                    True_Liquid_Y -= deltaY;
+                }
                 check = false;
             }
         }
-        require(Xmax > Xin);
+        if(perp == false) require(Xmax > Xin);
     }
 
-    //现货 交易，用Y买X input为Y
-    function Trade_YtoX(uint delta) internal lock returns(uint Xget) {
+    //现货/合约  交易，用Y买X input为Y
+    function Trade_YtoX(uint delta , bool perp) internal lock returns(uint Xget) {
         uint deltaY = delta;
         bool check = true;
         while(check == true){
@@ -252,12 +269,14 @@ contract Pool {
 
                 uint P_test = Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test);
 
-                Xget = (X_Coord - X_Coord_Test) * 1e18 / Peqx + Xget;
-                deltaY = deltaY - (Y_Coord_Test - Y_Coord) * 1e18 / Peqy;
-
-                True_Liquid_X -= (X_Coord - X_Coord_Test) * 1e18 / Peqx;
-                True_Liquid_Y += (Y_Coord_Test - Y_Coord) * 1e18 / Peqy;
-
+                Xget += (X_Coord - X_Coord_Test) * 1e18 / Peqx;
+                deltaY -= (Y_Coord_Test - Y_Coord) * 1e18 / Peqy;
+                if(perp == true){
+                    Xgetp += (X_Coord - X_Coord_Test) * 1e18 / Peqx;
+                }else{
+                    True_Liquid_X -= (X_Coord - X_Coord_Test) * 1e18 / Peqx;
+                    True_Liquid_Y += (Y_Coord_Test - Y_Coord) * 1e18 / Peqy;
+                }
                 uint Peqxt = Peqx;
                 uint Peqyt = Peqy;
                 Peqy = Peqyt * Yeq / Y_Coord_Test;
@@ -278,15 +297,19 @@ contract Pool {
                 Y_Coord += deltaY * Peqy / 1e18;
                 X_Coord = Math.cal_X(B, C, D, Y_Coord);
                 Xget += (X_Coord_Last - X_Coord) * 1e18 / Peqx;
-                True_Liquid_Y += deltaY;
-                True_Liquid_X -= (X_Coord_Last - X_Coord) * 1e18 / Peqx;
+                if(perp == true){
+                    Xgetp += (X_Coord_Last - X_Coord) * 1e18 / Peqx;
+                }else{
+                    True_Liquid_Y += deltaY;
+                    True_Liquid_X -= (X_Coord_Last - X_Coord) * 1e18 / Peqx;
+                }
                 check = false;
             }
         }
     }
 
-    //现货 交易，用Y买X input为X
-    function TradeYToExactX(uint delta, uint Ymax) internal lock returns(uint Yin) {
+    //现货/合约  交易，用Y买X input为X
+    function TradeYToExactX(uint delta, uint Ymax, bool perp) internal lock returns(uint Yin) {
         uint deltaX = delta;
         bool check = true;
         while(check == true){
@@ -299,10 +322,12 @@ contract Pool {
 
                 Yin += (Y_Coord_Test - Y_Coord) * 1e18 / Peqy;
                 deltaX -= (X_Coord - X_Coord_Test) * 1e18 / Peqx;
-
-                True_Liquid_Y +=  (Y_Coord_Test - Y_Coord) * 1e18 / Peqy;
-                True_Liquid_X -=  (X_Coord - X_Coord_Test) * 1e18 / Peqx;
-
+                if(perp == true){
+                    Xgetp += (X_Coord - X_Coord_Test) * 1e18 / Peqx;
+                }else{
+                    True_Liquid_Y +=  (Y_Coord_Test - Y_Coord) * 1e18 / Peqy;
+                    True_Liquid_X -=  (X_Coord - X_Coord_Test) * 1e18 / Peqx;
+                }
                 uint Peqxt = Peqx;
                 uint Peqyt = Peqy;
                 Peqy = Peqyt * Yeq / Y_Coord_Test;
@@ -323,12 +348,16 @@ contract Pool {
                 X_Coord -= deltaX * Peqx / 1e18;
                 Y_Coord = Math.cal_Y(B, C, D, X_Coord);
                 Yin += (Y_Coord - Y_Coord_Last) * 1e18 / Peqy;
-                True_Liquid_Y += (Y_Coord - Y_Coord_Last) * 1e18 / Peqy;
-                True_Liquid_X -= deltaX;
+                if(perp == true){
+                    Xgetp += deltaX;
+                }else{
+                    True_Liquid_Y += (Y_Coord - Y_Coord_Last) * 1e18 / Peqy;
+                    True_Liquid_X -= deltaX;
+                }
                 check = false;
             }
         }
-        require(Ymax > Yin);
+        if(perp == false) require(Ymax > Yin);
     }
 
     // 总的swap function 不支持闪电贷
@@ -345,192 +374,22 @@ contract Pool {
         uint amountYIn = balanceY - True_Liquid_Y;
         require(amountXIn > 0 || amountYIn > 0, 'Qilin: INSUFFICIENT_INPUT_AMOUNT');
         if(Xout > 0){
-            _safeTransfer(_tokenY, to, amountYIn - TradeYToExactX(Xout, amountYIn));
+            _safeTransfer(_tokenY, to, amountYIn - TradeYToExactX(Xout, amountYIn, false));
             _safeTransfer(_tokenX, to, Xout);
         }else if(Yout > 0){
-            _safeTransfer(_tokenX, to, amountXIn - TradeXToExactY(Yout, amountXIn));
+            _safeTransfer(_tokenX, to, amountXIn - TradeXToExactY(Yout, amountXIn, false));
             _safeTransfer(_tokenY, to, Yout);
         }else{
-            if(amountXIn > 0) _safeTransfer(_tokenY, to, Trade_XtoY(amountXIn));
-            if(amountYIn > 0) _safeTransfer(_tokenX, to, Trade_YtoX(amountYIn));
+            if(amountXIn > 0) _safeTransfer(_tokenY, to, Trade_XtoY(amountXIn, false));
+            if(amountYIn > 0) _safeTransfer(_tokenX, to, Trade_YtoX(amountYIn, false));
         }
     }
 
-    //Perp 交易，用X买Y，input为X 只被开平仓函数调用
-    function Perp_XtoY(uint delta) internal lock returns(uint Yget){
-        uint deltaX = delta;
-        bool check = true;
-        while(check == true){
-
-            uint X_Coord_Test = Xeq * Tick_range / 1e18;
-            uint Y_Coord_Test = Math.cal_Y(B, C, D, X_Coord_Test);
-
-            if(deltaX > (X_Coord_Test - X_Coord) * 1e18 / Peqx){
-                
-                uint P_test = Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test);
-
-                Yget += (Y_Coord - Y_Coord_Test) * 1e18 / Peqy;
-                Ygetp += (Y_Coord - Y_Coord_Test) * 1e18 / Peqy;
-                deltaX -= (X_Coord_Test - X_Coord) * 1e18 / Peqx;
-
-                uint Peqxt = Peqx;
-                uint Peqyt = Peqy;
-                Peqy = Peqyt * Yeq / Y_Coord_Test;
-                Peqx = Peqxt * Xeq / X_Coord_Test;
-                Price_local = P_test * Peqyt * Peqx / Peqxt / Peqy;
-                
-                X_Coord = Xeq;
-                Y_Coord = Yeq;
-                B = Math.cal_B(X_Coord, Y_Coord, D, Price_local);
-                C = 2 * 1e18 - B;
-                Virtual_Liquidity_Update();
-                X_Coord = Xeq;
-                Y_Coord = Yeq;
-
-            }else{
-                X_Coord_Last = X_Coord;
-                Y_Coord_Last = Y_Coord;
-                X_Coord += deltaX * Peqx / 1e18;
-                Y_Coord = Math.cal_Y(B, C, D, X_Coord);
-                Yget += (Y_Coord_Last - Y_Coord) * 1e18 / Peqy;
-                Ygetp += (Y_Coord_Last - Y_Coord) * 1e18 / Peqy;
-                check = false;
-            }
-        }
-    }
-
-    //Perp 交易，用X买Y，input为Y 只被开平仓函数调用
-    function PerpXToExactY(uint delta, uint Xmax) internal lock returns(uint Xin) {
-        uint deltaY = delta;
-        bool check = true;
-        while(check == true){
-
-            uint X_Coord_Test = Xeq * Tick_range / 1e18;
-            uint Y_Coord_Test = Math.cal_Y(B, C, D, X_Coord_Test);
-
-            if(deltaY > (Y_Coord - Y_Coord_Test) * 1e18 / Peqy){
-                uint P_test = Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test);
-
-                Xin += (X_Coord_Test - X_Coord) * 1e18 / Peqx;
-                deltaY -= (Y_Coord - Y_Coord_Test) * 1e18 / Peqy;
-                Ygetp += (Y_Coord - Y_Coord_Test) * 1e18 / Peqy;
-
-                uint Peqxt = Peqx;                                                        
-                uint Peqyt = Peqy;
-                Peqy = Peqyt * Yeq / Y_Coord_Test;
-                Peqx = Peqxt * Xeq / X_Coord_Test;
-                Price_local = P_test * Peqyt * Peqx / Peqxt / Peqy;
-                
-                X_Coord = Xeq;
-                Y_Coord = Yeq;
-                B = Math.cal_B(X_Coord, Y_Coord, D, Price_local);
-                C = 2 * 1e18 - B;
-                Virtual_Liquidity_Update();
-                X_Coord = Xeq;
-                Y_Coord = Yeq;
-
-            }else{
-                X_Coord_Last = X_Coord;
-                Y_Coord_Last = Y_Coord;
-                Y_Coord -= deltaY * Peqy / 1e18;
-                X_Coord = Math.cal_X(B, C, D, Y_Coord);
-                Xin += (X_Coord - X_Coord_Last) * 1e18 / Peqx;
-                Ygetp += deltaY;
-                check = false;
-            }
-        }
-        require(Xmax > Xin);
-    }
-
-    //Perp 交易，用Y买X，input为Y 只被开平仓函数调用
-    function Perp_YtoX(uint delta) internal lock returns(uint Xget){
-        uint deltaY = delta;
-        bool check = true;
-        while(check == true){
-
-            uint Y_Coord_Test = Xeq * Tick_range;
-            uint X_Coord_Test = Math.cal_X(B, C, D, Y_Coord_Test);
-
-            if(deltaY > (Y_Coord_Test - Y_Coord) * 1e18 / Peqy){
-                uint P_test = Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test);
-
-                Xget += (X_Coord - X_Coord_Test) * 1e18 / Peqx;
-                Xgetp += (X_Coord - X_Coord_Test) * 1e18 / Peqx;
-                deltaY -= (Y_Coord_Test - Y_Coord) * 1e18 / Peqy;
-
-                uint Peqxt = Peqx;
-                uint Peqyt = Peqy;
-                Peqy = Peqyt * Yeq / Y_Coord_Test;
-                Peqx = Peqxt * Xeq / X_Coord_Test;
-                Price_local = P_test * Peqyt * Peqx / Peqxt / Peqy;    
-                
-                X_Coord = Xeq;
-                Y_Coord = Yeq;
-                B = Math.cal_B(X_Coord, Y_Coord, D, Price_local);
-                C = 2 * 1e18 - B;
-                Virtual_Liquidity_Update();
-                X_Coord = Xeq;
-                Y_Coord = Yeq;
-
-            }else{
-                X_Coord_Last = X_Coord;
-                Y_Coord_Last = Y_Coord;
-                Y_Coord += deltaY * Peqy / 1e18;
-                X_Coord = Math.cal_X(B, C, D, Y_Coord);
-                Xget += (X_Coord_Last - X_Coord) * 1e18 / Peqx;
-                Xgetp += (X_Coord_Last - X_Coord) * 1e18 / Peqx;
-                check = false;
-            }
-        }
-    }
-
-    //Perp 交易，用Y买X，input为X 只被开平仓函数调用
-    function PerpYToExactX(uint delta, uint Ymax) internal lock returns(uint Yin) {
-        uint deltaX = delta;
-        bool check = true;
-        while(check == true){
-
-            uint Y_Coord_Test = Yeq * Tick_range / 1e18;
-            uint X_Coord_Test = Math.cal_X(B, C, D, Y_Coord_Test);
-
-            if(deltaX > (X_Coord - X_Coord_Test) * 1e18 / Peqx){
-                uint P_test = Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test);
-
-                Yin += (Y_Coord_Test - Y_Coord) * 1e18 / Peqy;
-                deltaX -= (X_Coord - X_Coord_Test) * 1e18 / Peqx;
-                Xgetp += (X_Coord - X_Coord_Test) * 1e18 / Peqx;
-
-                uint Peqxt = Peqx;
-                uint Peqyt = Peqy;
-                Peqy = Peqyt * Yeq / Y_Coord_Test;
-                Peqx = Peqxt * Xeq / X_Coord_Test;
-                Price_local = P_test * Peqyt * Peqx / Peqxt / Peqy;
-                
-                X_Coord = Xeq;
-                Y_Coord = Yeq;
-                B = Math.cal_B(X_Coord, Y_Coord, D, Price_local);
-                C = 2 * 1e18 - B;
-                Virtual_Liquidity_Update();
-                X_Coord = Xeq;
-                Y_Coord = Yeq;
-
-            }else{
-                X_Coord_Last = X_Coord;
-                Y_Coord_Last = Y_Coord;
-                X_Coord -= deltaX * Peqx / 1e18;
-                Y_Coord = Math.cal_Y(B, C, D, X_Coord);
-                Yin += (Y_Coord - Y_Coord_Last) * 1e18 / Peqy;
-                Xgetp += deltaX;
-                check = false;
-            }
-        }
-        require(Ymax > Yin);
-    }
     
     //得到实时价格 (Y in X)
-    function getPrice() public view returns(uint price){
-        price = Price_local * Peqy / Peqx;
-    }
+    //function getPrice() public view returns(uint price){
+    //    price = Price_local * Peqy / Peqx;
+    //}
 
     struct debtbook{
         address user_ID;
@@ -555,17 +414,17 @@ contract Pool {
     }
 
     //求各保证金价格
-    function Get_Margin_price() public view returns(uint[] memory margins){
+    function GetMarginPrice() public view returns(uint[] memory margins){
         uint Lei = Margin_tpyes.length;
         for(uint i = 0; i < Lei ; i++){
-            // margins.push(get_margin_price(Margin_tpyes[i]));
+            margins[i] = get_margin_price(Margin_tpyes[i]); 
         }
     }
 
     //求保证金净值
     function Net_Margin(address userID) public view returns(uint net){
         uint[] memory user_margin = margin_index[userID];
-        uint[] memory margin_price = Get_Margin_price();
+        uint[] memory margin_price = GetMarginPrice();
         uint Lei = user_margin.length;
         for(uint i = 0 ; i < Lei ; i++){
             net += user_margin[i] * margin_price[i] / 1e18;
@@ -587,7 +446,8 @@ contract Pool {
         (uint funding_x , , bool paying_side) = Getfundingrate();
         uint time_gap = block.number - fundingtime_Last;
         fundingtime_Last = block.number;
-        uint price = getPrice();
+        uint price; 
+        price = Price_local * Peqy / Peqx;
         if(paying_side_Last == false){
             Total_debt_X = Total_debt_X * (1e18 + funding_Last) * time_gap / 1e18;
             Total_debt_Y = Total_debt_Y - funding_Last * Total_debt_X * time_gap * price / 1e36;
@@ -600,60 +460,83 @@ contract Pool {
         }
 
 
-    //开仓 允许多空同时开仓
-    function Perp_open(uint delta_X, uint delta_Y, address userID) external lock{
-        require(delta_X >= 0 && delta_Y >= 0);
+    //开仓 不允许多空同时开仓
+    function Perp_open(uint delta_X, uint delta_Y, bool XtoY, address userID) public lock{
+        require(delta_X * delta_Y == 0 && delta_X + delta_Y > 0);
         refresh_totalbook(); 
-        require(Net_Margin(userID) * Leverage_Margin > Math.max (delta_X * get_margin_price(tokenX) + Net_Position(userID), delta_Y * get_margin_price(tokenY) + Net_Position(userID)),'Qilin: NOT ENOUGH MARGIN');
-        uint256 Get;
-        if(delta_X > 0){
-            Get = Perp_XtoY(delta_X);
-            debt_index[userID][false].debttoken_amount += delta_X * Total_debttoken_X / Total_debt_X;
-            debt_index[userID][true].position_amount += Get;
-            Total_debttoken_X = delta_X * Total_debttoken_X / Total_debt_X + Total_debttoken_X;
-            Total_debt_X = Total_debt_X + delta_X ;
+        require((Net_Margin(userID) +  Net_Position(userID) - Net_debt(userID)) / Leverage_Margin > Math.max (delta_X * get_margin_price(tokenX) + Net_Position(userID), delta_Y * get_margin_price(tokenY) + Net_Position(userID)),'Qilin: NOT ENOUGH MARGIN');
+        uint256 Out;
+        uint256 In;
+        if(XtoY == true){
+            if(delta_X > 0){
+                Out = Trade_XtoY(delta_X , true);
+                In = delta_X;
+            }else{
+                Out = delta_Y;
+                In = TradeXToExactY(delta_Y , 0 , true);
+            }
+            debt_index[userID][false].debttoken_amount += In * Total_debttoken_X / Total_debt_X;
+            debt_index[userID][true].position_amount += Out;
+            Total_debttoken_X = In * Total_debttoken_X / Total_debt_X + Total_debttoken_X;
+            Total_debt_X += In ;
+        }else{
+            if(delta_X > 0){
+                Out = delta_X;
+                In = TradeYToExactX(delta_X , 0 , true);
+            }else{
+                Out = Trade_YtoX(delta_Y , true);
+                In = delta_Y;
+            }
+            debt_index[userID][true].debttoken_amount += In * Total_debttoken_Y / Total_debt_Y;
+            debt_index[userID][false].position_amount += Out;
+            Total_debttoken_Y = In * Total_debttoken_Y / Total_debt_Y + Total_debttoken_Y;
+            Total_debt_Y += In ;
         }
-        if(delta_Y > 0){
-            Get = Perp_YtoX(delta_Y);
-            debt_index[userID][true].debttoken_amount += delta_Y * Total_debttoken_Y / Total_debt_Y;
-            debt_index[userID][false].position_amount += Get;
-            Total_debttoken_Y = delta_Y * Total_debttoken_Y / Total_debt_Y + Total_debttoken_Y;
-            Total_debt_Y += delta_Y ;
+    }
+
+    //一键 多空双开
+    function Perp_biopen(uint delta_X, uint delta_Y, address userID) external lock{
+        require(delta_X * delta_Y == 0 && delta_X + delta_Y > 0);
+        if(delta_X > 0){
+            Perp_open(delta_X , 0 , true , userID);
+            Perp_open(delta_X , 0 , false, userID);
+        }else{
+            Perp_open(0 , delta_Y , true , userID);
+            Perp_open(0 , delta_Y , false, userID);
         }
     }
     
 
-    //平仓 待修改
+    //平仓 待修改 默认只有X资产是白名单内
     function Perp_close(uint delta_X, uint delta_Y, address userID) public lock {
-        require(delta_X >= 0 && delta_Y >= 0);
+        require(delta_X * delta_Y == 0 && delta_X + delta_Y > 0);
         refresh_totalbook();
         require(delta_X <= debt_index[userID][false].position_amount && delta_Y <= debt_index[userID][true].position_amount,'Qilin: NOT ENOUGH POSITION');
         if(delta_X > 0){   
-            uint Get = Perp_XtoY(delta_X);
+            uint Get = Trade_XtoY(delta_X , true);
+            uint Y_close = delta_X * debt_index[userID][true].debttoken_amount * Total_debt_Y / Total_debttoken_Y / debt_index[userID][false].position_amount ;
             debt_index[userID][false].position_amount -= delta_X;
-            if(Get > debt_index[userID][true].debttoken_amount * Total_debt_Y / Total_debttoken_Y){
-                margin_index[userID][margin_type[tokenX]] += Trade_YtoX(Get - debt_index[userID][true].debttoken_amount * Total_debt_Y / Total_debttoken_Y);
-                Total_debt_Y = Total_debt_Y - debt_index[userID][true].debttoken_amount * Total_debt_Y / Total_debttoken_Y ; 
-                Total_debttoken_Y = Total_debttoken_Y - debt_index[userID][true].debttoken_amount;
-                debt_index[userID][true].debttoken_amount = 0;
+            Total_debt_Y -= Y_close ; 
+            Total_debttoken_Y -= debt_index[userID][true].debttoken_amount * delta_X / debt_index[userID][false].position_amount ;
+            debt_index[userID][true].debttoken_amount -= debt_index[userID][true].debttoken_amount * delta_X / debt_index[userID][false].position_amount;
+
+            if(Get >= Y_close){
+                margin_index[userID][margin_type[tokenX]] += Trade_YtoX(Get - Y_close , false);
             }else{
-                debt_index[userID][true].debttoken_amount -= Get * Total_debttoken_Y  / Total_debt_Y ;
-                Total_debttoken_Y = Total_debttoken_Y - Get * Total_debttoken_Y  / Total_debt_Y ;
-                Total_debt_Y -= Get;
+                //此处留有保证金还债的路由
             }
-        } 
-        if(delta_Y > 0){
-            uint Get = Perp_YtoX(delta_Y);
+        }else{
+            uint Get = Trade_YtoX(delta_Y , true);
+            uint X_close = delta_Y * debt_index[userID][false].debttoken_amount * Total_debt_X / Total_debttoken_X / debt_index[userID][true].position_amount ;
             debt_index[userID][true].position_amount -= delta_Y;
-            if(Get > debt_index[userID][false].debttoken_amount * Total_debt_X / Total_debttoken_X){
-                margin_index[userID][margin_type[tokenX]] += Get - debt_index[userID][false].debttoken_amount * Total_debt_X / Total_debttoken_X;
-                Total_debt_X = Total_debt_X - debt_index[userID][false].debttoken_amount * Total_debt_X / Total_debttoken_X ; 
-                Total_debttoken_X = Total_debttoken_X - debt_index[userID][false].debttoken_amount;
-                debt_index[userID][false].debttoken_amount = 0;
+            Total_debt_X -= X_close ; 
+            Total_debttoken_X -= debt_index[userID][false].debttoken_amount * delta_Y / debt_index[userID][true].position_amount ;
+            debt_index[userID][false].debttoken_amount -= debt_index[userID][false].debttoken_amount * delta_Y / debt_index[userID][true].position_amount;
+            
+            if(Get > X_close){
+                margin_index[userID][margin_type[tokenX]] += Get - X_close;
             }else{
-                debt_index[userID][false].debttoken_amount -= Get * Total_debttoken_X  / Total_debt_X ;
-                Total_debttoken_X = Total_debttoken_X - Get * Total_debttoken_X  / Total_debt_X ;
-                Total_debt_X -= Get;
+                //此处留有保证金还债的路由
             }
         }
     }
