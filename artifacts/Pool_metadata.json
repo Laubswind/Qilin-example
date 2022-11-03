@@ -221,42 +221,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "GetMarginPrice",
-				"outputs": [
-					{
-						"internalType": "uint256[]",
-						"name": "margins",
-						"type": "uint256[]"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Getfundingrate",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "funding_x",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "funding_x_8h",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "paying_side",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "Leverage_Margin",
 				"outputs": [
 					{
@@ -390,63 +354,6 @@
 					{
 						"internalType": "uint256",
 						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "userID",
-						"type": "address"
-					}
-				],
-				"name": "Net_Margin",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "net",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "userID",
-						"type": "address"
-					}
-				],
-				"name": "Net_Position",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "net",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "userID",
-						"type": "address"
-					}
-				],
-				"name": "Net_debt",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "net",
 						"type": "uint256"
 					}
 				],
@@ -933,6 +840,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "const18",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -1030,25 +950,6 @@
 					{
 						"internalType": "uint256",
 						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "token",
-						"type": "address"
-					}
-				],
-				"name": "get_margin_price",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "price",
 						"type": "uint256"
 					}
 				],
@@ -1381,10 +1282,10 @@
 			]
 		},
 		"Qilin/Qilin_Pool.sol": {
-			"keccak256": "0xfbc94dc132d92fad62ced069509b08cccbd2a1a9b6a09cbd16ee5c55fd619f90",
+			"keccak256": "0x306a79b6484f735a516673bbe1427b45dcaf3548ed9bbde2ba9b5736d7e20f3b",
 			"urls": [
-				"bzz-raw://baa3203b90e9a689ed3f660a53015413a1895c32aeba95710fa2d5ba75de7030",
-				"dweb:/ipfs/QmZjNM8mn1txoJ3QmZ9cjj27N1VFrJt2DWK161n8WV92Gz"
+				"bzz-raw://3c41bbda8ed73539f5144e52f72587151a9b9cfc9989c969ab0080eb39732aea",
+				"dweb:/ipfs/QmPGkhkw9yCWiWfkxZK3mmabRChZ8NF714BjCTowP6Y1dC"
 			]
 		},
 		"Qilin/interface/IERC20.sol": {
@@ -1423,10 +1324,10 @@
 			]
 		},
 		"Qilin/libraries/Math.sol": {
-			"keccak256": "0xe1015052128727406f2b47aac318b3c15c3a092d5a412e526448b285c012cdbc",
+			"keccak256": "0xe63e6ed6031670ddfbdf839c6ecd1ff67195e9178a084f2087238861613a8d82",
 			"urls": [
-				"bzz-raw://590595d87cb36a281dd4c1f273488822f8362d2110c9c83dc8ed894485d18f7c",
-				"dweb:/ipfs/QmR385mDcfgpwXUk8G2QLrwQ3nJDRjdQnMzxyzaYMGkkgA"
+				"bzz-raw://4b60917b879fd1542fc8f7a803fcaf65ae1f0e18c31588090501b0de359b4aa0",
+				"dweb:/ipfs/QmVPACZB6nJaPQKTnmWYKtAko6HUd2m7zmPNyiAoYi6ugg"
 			]
 		},
 		"Qilin/libraries/Safemath.sol": {

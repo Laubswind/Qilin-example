@@ -63,5 +63,38 @@ library Math {
         B = (8 * X * X * Y * Y * 1e36 + D * D * D * X * 1e36 - D * D * D * Y * P * 1e18) / (4 * X * X * Y * Y * (1e18 + P));
     }
 
+    // funding中求B
+    function cal_B_f(uint X, uint Y, uint D) internal pure returns(uint B){
+        B = (D * D * D / 4 / X / Y - 2 * Y) * 1E18 / (X - Y);
+    }
+
+    // funding中求interest rate
+    function cal_interest(uint getp, uint True_Liquid, uint Base_rate) internal pure returns(uint I){
+        I = getp * 1e18  / (True_Liquid + getp) / 57600 + Base_rate;
+    }
+
+    //swap中计算增减量
+    function cal_cross(uint A, uint B, uint C) internal pure returns(uint D){
+        D = (A - B) * 1e18 / C;
+    }
+
+    struct param{
+        uint TX;
+        uint TY;
+        uint PX;
+        uint PY;
+        uint XP;
+        uint YP;
+        uint _B;
+        uint _C;
+        uint _D;
+        uint _M;
+        uint XC;
+        uint YC;
+        uint BR;
+        uint FU;
+    }
+    
+
     
 }
