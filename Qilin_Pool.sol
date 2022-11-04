@@ -56,6 +56,8 @@ contract Pool is QilinERC20{
     uint256 public Liquidation_bonus;               //清算人罚金
 
     uint256 public const18 = 1e18;
+
+    uint256 public fee;
  
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
     constructor() public {
@@ -162,7 +164,6 @@ contract Pool is QilinERC20{
             uint Y_Coord_Test = Math.cal_Y(B, C, D, X_Coord_Test);
 
             if(deltaX > Math.cal_cross(X_Coord_Test, X_Coord, Peqx)){
-                uint P_test = Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test);
 
                 Yget += Math.cal_cross(Y_Coord, Y_Coord_Test, Peqy);
                 deltaX -= Math.cal_cross(X_Coord_Test, X_Coord, Peqx);
@@ -175,7 +176,7 @@ contract Pool is QilinERC20{
 
                 Peqy = Peqy * Yeq / Y_Coord_Test;
                 Peqx = Peqx * Xeq / X_Coord_Test;
-                Price_local = P_test * Y_Coord_Test * Xeq / X_Coord_Test / Yeq;
+                Price_local = Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test) * Y_Coord_Test * Xeq / X_Coord_Test / Yeq;
                 
                 X_Coord = Xeq;
                 Y_Coord = Yeq;
@@ -345,7 +346,7 @@ contract Pool is QilinERC20{
                 Yin += Math.cal_cross(Y_Coord, Y_Coord_Last, Peqy);
                 if(perp == true){
                     Xgetp += deltaX;
-                }else{
+                }else{ 
                     True_Liquid_Y += Math.cal_cross(Y_Coord, Y_Coord_Last, Peqy);
                     True_Liquid_X -= deltaX;
                 }
@@ -391,6 +392,7 @@ contract Pool is QilinERC20{
 
 
     address[] public Margin_tpyes; //记录白名单内token的address
+    uint[] public Margin_resrve;   //记录保证金的总存储量
 
     mapping(address => mapping(bool => debtbook)) public debt_index;  //将用户address + 债务token（左侧资产还是右侧资产）与存储其debt_token和仓位 对应
 
@@ -437,8 +439,7 @@ contract Pool is QilinERC20{
         (uint funding_x , bool paying_side) = Getfundingrate();
         uint time_gap = block.number - fundingtime_Last;
         fundingtime_Last = block.number;
-        uint price; 
-        price = Price_local * Peqy / Peqx;
+        uint price = Price_local * Peqy / Peqx;
         if(paying_side_Last == false){
             Total_debt_X = Total_debt_X * (const18 + funding_Last) * time_gap / const18;
             Total_debt_Y = Total_debt_Y - funding_Last * Total_debt_X * time_gap * price / const18 / const18;
@@ -532,8 +533,8 @@ contract Pool is QilinERC20{
         }
     }
 
-    //清债 待完成
-    function Clean_debt(address userID , bool token) internal lock{
+    //提取保证金 待完成
+    function WithdrawMargin (address userID , address tokenID， address to) internal lock{
         
     }
 
@@ -553,6 +554,7 @@ contract Pool is QilinERC20{
 
     //加保证金
     function Add_Margin(uint new_margin, address tokenID, address userID) public {
+        
         margin_index[userID][margin_type[tokenID]] += new_margin;
     } 
 

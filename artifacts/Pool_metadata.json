@@ -1282,10 +1282,10 @@
 			]
 		},
 		"Qilin/Qilin_Pool.sol": {
-			"keccak256": "0x306a79b6484f735a516673bbe1427b45dcaf3548ed9bbde2ba9b5736d7e20f3b",
+			"keccak256": "0xd86e76f4dbd8b6f776a1aa714ee2cb85f3aac8fc4043d0ebbfb02edb086c6737",
 			"urls": [
-				"bzz-raw://3c41bbda8ed73539f5144e52f72587151a9b9cfc9989c969ab0080eb39732aea",
-				"dweb:/ipfs/QmPGkhkw9yCWiWfkxZK3mmabRChZ8NF714BjCTowP6Y1dC"
+				"bzz-raw://fea436e6814ab6d2f4af186dc648516416911b00816e887ebaf03e0a2b67b2bc",
+				"dweb:/ipfs/QmVLHsmX6PKC8PN4eU4PdafPUm8UT95oTasLn2YnKuMAq1"
 			]
 		},
 		"Qilin/interface/IERC20.sol": {
