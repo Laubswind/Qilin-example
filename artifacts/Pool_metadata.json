@@ -92,11 +92,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "new_margin",
-						"type": "uint256"
-					},
-					{
 						"internalType": "address",
 						"name": "tokenID",
 						"type": "address"
@@ -290,32 +285,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "M",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "M_Last",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -323,12 +292,12 @@
 						"type": "uint256"
 					}
 				],
-				"name": "Margin_tpyes",
+				"name": "Margin_reserve",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "uint256",
 						"name": "",
-						"type": "address"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -919,6 +888,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "fee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "funding_Last",
 				"outputs": [
 					{
@@ -1282,10 +1264,10 @@
 			]
 		},
 		"Qilin/Qilin_Pool.sol": {
-			"keccak256": "0xd86e76f4dbd8b6f776a1aa714ee2cb85f3aac8fc4043d0ebbfb02edb086c6737",
+			"keccak256": "0x0fce9f9045c0c54d47bae995871d8ab918b6c0b83056b9520aae3b760e686480",
 			"urls": [
-				"bzz-raw://fea436e6814ab6d2f4af186dc648516416911b00816e887ebaf03e0a2b67b2bc",
-				"dweb:/ipfs/QmVLHsmX6PKC8PN4eU4PdafPUm8UT95oTasLn2YnKuMAq1"
+				"bzz-raw://cabd187e6c39c33f90ed4305f92ce696b4753b118ac4dea7a6ac7103074acd21",
+				"dweb:/ipfs/QmUyXb9bm7BQ4Zj5HqHEyidf6rpLKAD7VYMB4KbfZMWiLD"
 			]
 		},
 		"Qilin/interface/IERC20.sol": {

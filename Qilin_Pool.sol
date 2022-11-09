@@ -40,9 +40,7 @@ contract Pool is QilinERC20{
     bool public paying_side_Last;                   //系统内记录上一次funding方向
     uint256 public funding_x_8h_upper;              //= 5000000000固定值，留接口修改
     uint256 public Base_rate;                       //= 156200，固定值，留接口修改
-    uint256 public M;
     uint256 public N;
-    uint256 public M_Last;
     uint256 public N_Last;
     
     address public factory;
@@ -57,6 +55,7 @@ contract Pool is QilinERC20{
 
     uint256 public const18 = 1e18;
 
+    bool Two_white;
     uint256 public fee;
  
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
@@ -85,20 +84,13 @@ contract Pool is QilinERC20{
         require(success && (data.length == 0 || abi.decode(data, (bool))), 'TRANSFER_FAILED');
     }
 
-    //function getReserves() public view returns (uint _reserveX, uint _reserveY, uint256 _blockTimestampLast) {
-    //    _reserveX = True_Liquid_X;
-    //    _reserveY = True_Liquid_Y;
-    //   _blockTimestampLast = block.timestamp;
-    //}
-
     // 获取资金费率
     function Getfundingrate () internal view returns(uint256 funding_x , bool paying_side){
         uint256 XE = True_Liquid_X * Peqx / const18;
         uint256 YE = True_Liquid_Y * Peqy / const18;
-        uint256 DE = D * const18 / M;
-        uint256 BE = Math.cal_B_f(XE, YE, DE);
+        uint256 BE = Math.cal_B_f(XE, YE, D);
         uint256 CE = 2* const18 - BE;
-        uint256 PE = Math.cal_price(BE, CE, DE, XE, YE) * Peqy / Peqx;
+        uint256 PE = Math.cal_price(BE, CE, D, XE, YE) * Peqy / Peqx;
         uint256 PS = Math.cal_price(B, C, D, X_Coord, Y_Coord) * Peqy / Peqx;
         if(PS > PE){
             uint256 interest_rate = Math.cal_interest(Ygetp , True_Liquid_Y , Base_rate);
@@ -116,15 +108,11 @@ contract Pool is QilinERC20{
 
     // 虚拟流动性更新
     function Virtual_Liquidity_Update() internal {
-        N = Math.cbrt((True_Liquid_X * B * Peqx + Peqy * C * True_Liquid_Y) * True_Liquid_X * True_Liquid_Y * const18 * const18 * const18 / (True_Liquid_X0 * B * Peqx + Peqy * C * True_Liquid_Y0) / True_Liquid_X0 / True_Liquid_Y0);
-        uint XA = X_Coord * N * const18 * const18 / Peqx / N_Last / M_Last;
-        uint YA = Y_Coord * N * const18 * const18 / Peqx / N_Last / M_Last;
-        M = Math.min3 (Leverage_Max, (XA + Xgetp) * const18 / (XA), (YA + Ygetp) * const18 / (YA));
-        D = D0 * M * N / const18 / const18;
+        N = Math.cbrt((True_Liquid_X * B * Peqx + Peqy * C * True_Liquid_Y) * True_Liquid_X * True_Liquid_Y * const18 * const18 / (True_Liquid_X0 * B * Peqx + Peqy * C * True_Liquid_Y0) / True_Liquid_X0 / True_Liquid_Y0);
+        D = D0 * N / const18 / const18;
         Xeq = D/2;
         Yeq = Xeq;
         N_Last = N;
-        M_Last = M;
     }
 
     // 添加流动性
@@ -377,11 +365,6 @@ contract Pool is QilinERC20{
         }
     }
 
-    
-    //得到实时价格 (Y in X)
-    //function getPrice() public view returns(uint price){
-    //    price = Price_local * Peqy / Peqx;
-    //}
 
     struct debtbook{
         address user_ID;
@@ -391,47 +374,31 @@ contract Pool is QilinERC20{
     }
 
 
-    address[] public Margin_tpyes; //记录白名单内token的address
-    uint[] public Margin_resrve;   //记录保证金的总存储量
+    uint[2] public Margin_reserve;   //记录保证金的总存储量
 
     mapping(address => mapping(bool => debtbook)) public debt_index;  //将用户address + 债务token（左侧资产还是右侧资产）与存储其debt_token和仓位 对应
 
-    mapping(address => uint[]) public margin_index;  //将用户address与存储其保证金的数组对应
+    mapping(address => uint[2]) public margin_index;  //将用户address与存储其保证金的数组对应
 
     mapping(address => uint) public margin_type; //将保证金白名单token address与其在数组中的序列对应
 
 
-    //求单一保证金种类价格 待完成
-    function get_margin_price(address token) internal view returns(uint price){
 
-    }
-
-    //求各保证金价格
-    function GetMarginPrice() internal view returns(uint[] memory margins){
-        uint Lei = Margin_tpyes.length;
-        for(uint i = 0; i < Lei ; i++){
-            margins[i] = get_margin_price(Margin_tpyes[i]); 
-        }
-    }
 
     //求保证金净值
     function Net_Margin(address userID) internal view returns(uint net){
-        uint[] memory user_margin = margin_index[userID];
-        uint[] memory margin_price = GetMarginPrice();
-        uint Lei = user_margin.length;
-        for(uint i = 0 ; i < Lei ; i++){
-            net += user_margin[i] * margin_price[i] / const18;
-        }
+        net = margin_index[userID][0] + margin_index[userID][1] * Price_local * Peqy / Peqx / const18;
+        
     }
 
     //求仓位净值 注：36位
     function Net_Position(address userID) internal view returns(uint net){
-        net = debt_index[userID][false].position_amount * get_margin_price(tokenX) + debt_index[userID][true].position_amount * get_margin_price(tokenY);
+        net = debt_index[userID][false].position_amount * const18 + debt_index[userID][true].position_amount * Price_local * Peqy / Peqx / const18;
     }
 
     //求债务净值
     function Net_debt(address userID) internal view returns(uint net){
-        net = debt_index[userID][true].debttoken_amount * Total_debt_Y / Total_debttoken_Y * get_margin_price(tokenY) /1e18 + debt_index[userID][false].debttoken_amount * Total_debt_X / Total_debttoken_X * get_margin_price(tokenX) / 1e18;
+        net = debt_index[userID][true].debttoken_amount * Total_debt_Y / Total_debttoken_Y + debt_index[userID][false].debttoken_amount * Total_debt_X / Total_debttoken_X * Price_local * Peqy / Peqx / const18;
     }
 
     //更新debt总账
@@ -456,7 +423,7 @@ contract Pool is QilinERC20{
     function Perp_open(uint delta_X, uint delta_Y, bool XtoY, address userID) public lock{
         require(delta_X * delta_Y == 0 && delta_X + delta_Y > 0);
         refresh_totalbook(); 
-        require((Net_Margin(userID) +  Net_Position(userID) - Net_debt(userID)) / Leverage_Margin > Math.max (delta_X * get_margin_price(tokenX) + Net_Position(userID), delta_Y * get_margin_price(tokenY) + Net_Position(userID)),'Qilin: NOT ENOUGH MARGIN');
+        require((Net_Margin(userID) +  Net_Position(userID) - Net_debt(userID)) / Leverage_Margin > Math.max (delta_X * const18 + Net_Position(userID), delta_Y * Price_local * Peqy / Peqx + Net_Position(userID)),'Qilin: NOT ENOUGH MARGIN');
         uint256 Out;
         uint256 In;
         if(XtoY == true){
@@ -501,9 +468,8 @@ contract Pool is QilinERC20{
 
     //平仓 待修改 默认只有X资产是白名单内
     function Perp_close(uint delta_X, uint delta_Y, address userID) public lock {
-        require(delta_X * delta_Y == 0 && delta_X + delta_Y > 0);
+        require(delta_X * delta_Y == 0 && delta_X + delta_Y > 0 && Net_Margin(userID) + Net_Position(userID) > Net_debt(userID) && delta_X <= debt_index[userID][false].position_amount && delta_Y <= debt_index[userID][true].position_amount);
         refresh_totalbook();
-        require(delta_X <= debt_index[userID][false].position_amount && delta_Y <= debt_index[userID][true].position_amount,'NOT ENOUGH POSITION');
         if(delta_X > 0){   
             uint Get = Trade_XtoY(delta_X , true);
             uint Y_close = delta_X * debt_index[userID][true].debttoken_amount * Total_debt_Y / Total_debttoken_Y / debt_index[userID][false].position_amount ;
@@ -512,10 +478,13 @@ contract Pool is QilinERC20{
             Total_debttoken_Y -= debt_index[userID][true].debttoken_amount * delta_X / debt_index[userID][false].position_amount ;
             debt_index[userID][true].debttoken_amount -= debt_index[userID][true].debttoken_amount * delta_X / debt_index[userID][false].position_amount;
 
-            if(Get >= Y_close){
-                margin_index[userID][margin_type[tokenX]] += Trade_YtoX(Get - Y_close , false);
+            if(Get > Y_close && Two_white == false){
+                margin_index[userID][0] += Trade_YtoX(Get - Y_close , false);
+            }else if(margin_index[userID][1] + Get > Y_close && Two_white == true){
+                margin_index[userID][1] = margin_index[userID][1] + Get - Y_close;
             }else{
-                //此处留有保证金还债的路由
+                margin_index[userID][0] = margin_index[userID][0] - TradeXToExactY(Y_close - Get - margin_index[userID][1] , margin_index[userID][0], false);
+                margin_index[userID][1] = 0;
             }
         }else{
             uint Get = Trade_YtoX(delta_Y , true);
@@ -525,26 +494,20 @@ contract Pool is QilinERC20{
             Total_debttoken_X -= debt_index[userID][false].debttoken_amount * delta_Y / debt_index[userID][true].position_amount ;
             debt_index[userID][false].debttoken_amount -= debt_index[userID][false].debttoken_amount * delta_Y / debt_index[userID][true].position_amount;
             
-            if(Get > X_close){
-                margin_index[userID][margin_type[tokenX]] += Get - X_close;
+            if(margin_index[userID][0] + Get > X_close){
+                margin_index[userID][0] = margin_index[userID][0] + Get - X_close;
             }else{
-                //此处留有保证金还债的路由
+                margin_index[userID][1] = margin_index[userID][1] - TradeYToExactX(X_close - Get - margin_index[userID][0], margin_index[userID][1], false);
+                margin_index[userID][0] = 0;
             }
         }
     }
 
-    //提取保证金 待完成
-    function WithdrawMargin (address userID , address tokenID， address to) internal lock{
-        
-    }
-
     //清算 待修改
     function Liquidate(address userID, address _to) external lock {
-        require(Net_debt(userID) > Net_Position(userID) && Net_debt(userID) - Net_Position(userID) > Liquidation_rate * Net_Margin(userID), 'Qilin: FORBIDDEN');
-        uint Lei = Margin_tpyes.length;
-        for(uint i = 0 ; i < Lei ; i ++ ){
-            _safeTransfer(Margin_tpyes[i], _to ,  margin_index[userID][i] * Liquidation_bonus);
-        }
+        require(Net_Margin(userID) + Net_Position(userID) <= Net_debt(userID) || Net_Margin(userID) + Net_Position(userID) - Net_debt(userID) <= Net_Position(userID) * Liquidation_rate, 'Qilin: FORBIDDEN');
+        _safeTransfer(tokenX, _to ,  margin_index[userID][0] * Liquidation_bonus);
+        _safeTransfer(tokenY, _to ,  margin_index[userID][1] * Liquidation_bonus);
         delete margin_index[userID]; //
         debt_index[userID][false].debttoken_amount = 0;
         debt_index[userID][true].debttoken_amount = 0;
@@ -553,10 +516,26 @@ contract Pool is QilinERC20{
 
 
     //加保证金
-    function Add_Margin(uint new_margin, address tokenID, address userID) public {
-        
-        margin_index[userID][margin_type[tokenID]] += new_margin;
+    function Add_Margin(address tokenID, address userID) public {
+        uint new_margin;
+        if(tokenID == tokenX){
+            new_margin = IERC20(tokenID).balanceOf(address(this)) - True_Liquid_X - Margin_reserve[0];
+            margin_index[userID][0] += new_margin;
+            Margin_reserve[0] += new_margin;
+        }else if(tokenID == tokenY){
+            new_margin = IERC20(tokenID).balanceOf(address(this)) - True_Liquid_Y - Margin_reserve[1];
+            margin_index[userID][1] += new_margin;
+            Margin_reserve[1] += new_margin;
+        }
     } 
+
+    //提取保证金
+    function WithdrawMargin (address userID , address tokenID, address to, uint amount) internal lock{
+        require(margin_index[userID][margin_type[tokenID]] > amount, 'NOT ENOUGH MARGIN');
+        margin_index[userID][margin_type[tokenID]] -= amount;
+        require(Net_Margin(userID) + Net_Position(userID) > Net_debt(userID) && Net_Margin(userID) + Net_Position(userID) - Net_debt(userID) > Net_Position(userID) * Liquidation_rate, 'MARGIN TOO LOW');
+        _safeTransfer(tokenID, to, amount);
+    }
 
     //留端口设置虚拟流动性杠杆上限
     function Set_LeverageMax(uint L) external {
@@ -575,8 +554,6 @@ contract Pool is QilinERC20{
         require(msg.sender == factory, 'Qilin: FORBIDDEN');
         funding_x_8h_upper = f;
     }
-
-
 
     //留端口设置 清算线
     function Set_Liquidation_rate(uint rate) external{
