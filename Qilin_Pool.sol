@@ -59,6 +59,7 @@ contract Pool is QilinERC20{
     uint256 public fee;
  
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
+    
     constructor() public {
         factory = msg.sender;
     }
@@ -73,10 +74,21 @@ contract Pool is QilinERC20{
         unlocked = 1;
     }
 
-    function initialize(address _tokenX, address _tokenY) external {
-        require(msg.sender == factory, 'FORBIDDEN'); // sufficient check
+    modifier onlyFactoryCall() {
+        require(msg.sender == factory);
+        _;
+    }
+
+    function initialize(address _tokenX, address _tokenY) external onlyFactoryCall {
+ 
         tokenX = _tokenX;
         tokenY = _tokenY;
+        B = const18;
+        C = const18;
+        D = const18;
+        D0 = D;
+        Xeq = D/2;
+        Yeq = Xeq;
     }
 
     function _safeTransfer(address token, address to, uint value) private {
@@ -85,26 +97,31 @@ contract Pool is QilinERC20{
     }
 
     // 获取资金费率
-    function Getfundingrate () internal view returns(uint256 funding_x , bool paying_side){
-        uint256 XE = Math.cal_times( True_Liquid_X , Peqx , const18 );
-        uint256 YE = Math.cal_times( True_Liquid_Y , Peqy , const18 );
-        uint256 BE = Math.cal_B_f(XE, YE, D);
-        uint256 CE = 2 * const18 - BE;
-        uint256 PE = Math.cal_times( Math.cal_price(BE, CE, D, XE, YE) , Peqy , Peqx );
-        uint256 PS = Math.cal_times( Math.cal_price(B, C, D, X_Coord, Y_Coord) , Peqy , Peqx );
-        if(PS > PE){
-            uint256 interest_rate = Math.cal_interest(Ygetp , True_Liquid_Y , Base_rate);
-            funding_x = Math.cal_cross(PS , PE , PE) / 5760 + interest_rate;
-            paying_side = false;
-        }else{
-            uint256 interest_rate = Math.cal_interest(Xgetp , True_Liquid_X , Base_rate);
-            funding_x = Math.cal_cross(PE , PS , PE) / 5760 + interest_rate;
-            paying_side = true;
-        }
-        if(funding_x * 1920 > funding_x_8h_upper){
-            funding_x = funding_x_8h_upper / 1920;
-        }
-    }
+    //function Getfundingrate () internal view returns(uint256 funding_x , bool paying_side){
+    //    uint256 XE = Math.cal_times( True_Liquid_X , Peqx , const18 );
+    //    uint256 YE = Math.cal_times( True_Liquid_Y , Peqy , const18 );
+    //    uint256 BE = Math.cal_B_f(XE, YE, D);
+    //    uint256 CE = 2 * const18 - BE;
+    //    uint256 PE = Math.cal_times( Math.cal_price(BE, CE, D, XE, YE) , Peqy , Peqx );
+    //    uint256 PS = Math.cal_times( Math.cal_price(B, C, D, X_Coord, Y_Coord) , Peqy , Peqx );
+    //    if(PS > PE){
+    //        uint256 interest_rate = Math.cal_interest(Ygetp , True_Liquid_Y , Base_rate);
+    //        funding_x = Math.cal_cross(PS , PE , PE) / 5760 + interest_rate;
+    //        paying_side = false;
+    //    }else{
+    //        uint256 interest_rate = Math.cal_interest(Xgetp , True_Liquid_X , Base_rate);
+    //        funding_x = Math.cal_cross(PE , PS , PE) / 5760 + interest_rate;
+    //        paying_side = true;
+    //   }
+    //    if(funding_x * 1920 > funding_x_8h_upper){
+    //        funding_x = funding_x_8h_upper / 1920;
+    //    }
+    //}
+
+    //function Getfundingrate () internal view returns(uint256 funding_x , bool paying_side){
+    //    (uint PE , uint PS ) = Math.Get_PEPS(True_Liquid_X , True_Liquid_Y ,  Peqx , Peqy , X_Coord , Y_Coord , B , C , D) ;
+    //    (funding_x , paying_side) = Math.Get_funding(PE, PS , Xgetp , Ygetp , Base_rate , funding_x_8h_upper , True_Liquid_X , True_Liquid_Y);
+    //}
 
     // 虚拟流动性更新
     function Virtual_Liquidity_Update() internal {
@@ -143,8 +160,8 @@ contract Pool is QilinERC20{
     }
 
     //现货/合约 交易，用X买Y input为 delta：用户支付的X值，perp：是否为合约交易，output为 Yget：用户支付的X值所能换出的Y值
-    function Trade_XtoY(uint delta, bool perp) internal lock returns(uint Yget) {
-        uint deltaX = delta;
+    function Trade_XtoY(uint deltaX, bool perp) internal lock returns(uint Yget) {
+
         bool check = true;
         while(check == true){
             //计算此时曲线内触发跨tick的X值
@@ -221,8 +238,8 @@ contract Pool is QilinERC20{
     }
 
     //现货/合约 交易，用X买Y，input为 delta：所需的目标Y值， Xmax：用户可以支付的X值上限，perp：是否是合约交易，output为Xin：为换出所需Y值，用户所要支付的精确X值
-    function TradeXToExactY(uint delta, uint Xmax, bool perp) internal lock returns(uint Xin) {
-        uint deltaY = delta;
+    function TradeXToExactY(uint deltaY, uint Xmax, bool perp) internal lock returns(uint Xin) {
+ 
         bool check = true;
         while(check == true){
             
@@ -283,8 +300,8 @@ contract Pool is QilinERC20{
     }
 
     //现货/合约  交易，用Y买X input为Y
-    function Trade_YtoX(uint delta , bool perp) internal lock returns(uint Xget) {
-        uint deltaY = delta;
+    function Trade_YtoX(uint deltaY , bool perp) internal lock returns(uint Xget) {
+
         bool check = true;
         while(check == true){
 
@@ -332,8 +349,8 @@ contract Pool is QilinERC20{
     }
 
     //现货/合约  交易，用Y买X input为X
-    function TradeYToExactX(uint delta, uint Ymax, bool perp) internal lock returns(uint Yin) {
-        uint deltaX = delta;
+    function TradeYToExactX(uint deltaX, uint Ymax, bool perp) internal lock returns(uint Yin) {
+
         bool check = true;
         while(check == true){
 
@@ -382,32 +399,37 @@ contract Pool is QilinERC20{
     }
 
     // 总的swap function 现货交易时调用  input为 to：资产输出地址 ，Xout：用户所需Y to exact X 的精准X输出值， Yout：用户所需X to exact Y 的精准X输出值；如果Xout&Yout均为0，则代表用户无需exact，只需将输入资产全部输出即可
-    function swap(address to, uint256 Xout, uint256 Yout) external lock{
+    //function swap(address to, uint256 Xout, uint256 Yout) external lock{
 
-        //检测，Xout和Yout不可同时大于0
-        require(Xout == 0 || Yout == 0);
-        // require(to != tokenX && to != tokenY, 'Qilin: INVALID_TO');  不是很理解
+    //    //检测，Xout和Yout不可同时大于0
+    //    require(Xout == 0 || Yout == 0);
+    //    // require(to != tokenX && to != tokenY, 'Qilin: INVALID_TO');  不是很理解
 
+    //    //检测用户转入池的资产量
+    //    (uint amountXIn , uint amountYIn) = _swap();
+
+    //    //Xout大于0则代表Y to exact X，并将剩余Y转出
+    //    if(Xout > 0){
+    //        _safeTransfer(tokenY, to, amountYIn - TradeYToExactX(Xout, amountYIn, false));
+    //        _safeTransfer(tokenX, to, Xout);
+
+    //   //Yout大于0则代表X to exact Y，并将剩余X转出
+    //    }else if(Yout > 0){
+    //        _safeTransfer(tokenX, to, amountXIn - TradeXToExactY(Yout, amountXIn, false));
+    //        _safeTransfer(tokenY, to, Yout);
+
+    //    //都为0则将用户转入资产全部swap并转出
+    //    }else{
+    //        if(amountXIn > 0) _safeTransfer(tokenY, to, Trade_XtoY(amountXIn, false));
+    //        if(amountYIn > 0) _safeTransfer(tokenX, to, Trade_YtoX(amountYIn, false));
+    //    }
+    //}
+
+    function _swap() external view returns (uint amountXIn , uint amountYIn){
+        amountXIn = IERC20(tokenX).balanceOf(address(this)) - True_Liquid_X;
+        amountYIn = IERC20(tokenY).balanceOf(address(this)) - True_Liquid_Y;
         //检测用户转入池的资产量
-        uint amountXIn = IERC20(tokenX).balanceOf(address(this)) - True_Liquid_X;
-        uint amountYIn = IERC20(tokenY).balanceOf(address(this)) - True_Liquid_Y;
         require(amountXIn > 0 || amountYIn > 0);
-
-        //Xout大于0则代表Y to exact X，并将剩余Y转出
-        if(Xout > 0){
-            _safeTransfer(tokenY, to, amountYIn - TradeYToExactX(Xout, amountYIn, false));
-            _safeTransfer(tokenX, to, Xout);
-
-        //Yout大于0则代表X to exact Y，并将剩余X转出
-        }else if(Yout > 0){
-            _safeTransfer(tokenX, to, amountXIn - TradeXToExactY(Yout, amountXIn, false));
-            _safeTransfer(tokenY, to, Yout);
-
-        //都为0则将用户转入资产全部swap并转出
-        }else{
-            if(amountXIn > 0) _safeTransfer(tokenY, to, Trade_XtoY(amountXIn, false));
-            if(amountYIn > 0) _safeTransfer(tokenX, to, Trade_YtoX(amountYIn, false));
-        }
     }
 
 
@@ -447,7 +469,9 @@ contract Pool is QilinERC20{
 
     //更新debt总账
     function refresh_totalbook() internal {
-        (uint funding_x , bool paying_side) = Getfundingrate();
+        (uint PE , uint PS ) = Math.Get_PEPS(True_Liquid_X , True_Liquid_Y ,  Peqx , Peqy , X_Coord , Y_Coord , B , C , D) ;
+        (uint funding_x , bool paying_side) = Math.Get_funding(PE, PS , Xgetp , Ygetp , Base_rate , funding_x_8h_upper , True_Liquid_X , True_Liquid_Y);
+        //(uint funding_x , bool paying_side) = Getfundingrate();
         uint time_gap = block.number - fundingtime_Last;
         fundingtime_Last = block.number;
         uint price = Math.cal_times(Price_local , Peqy , Peqx);
@@ -588,20 +612,20 @@ contract Pool is QilinERC20{
 
 
     //留端口设置保证金杠杆上限
-    function Set_LeverageMargin(uint L) external {
-        require(msg.sender == factory);
+    function Set_LeverageMargin(uint L) external onlyFactoryCall {
+
         Leverage_Margin = L;
     }
 
     //留端口设置funding rate上限
-    function Set_fundingrate_upper(uint f) external {
-        require(msg.sender == factory);
+    function Set_fundingrate_upper(uint f) external onlyFactoryCall {
+
         funding_x_8h_upper = f;
     }
 
     //留端口设置 维持保证金率
-    function Set_Liquidation_rate(uint rate) external{
-        require(msg.sender == factory);
+    function Set_Liquidation_rate(uint rate) external onlyFactoryCall {
+
         Liquidation_rate = rate;
     }
 
