@@ -142,46 +142,75 @@ contract Pool is QilinERC20{
         Virtual_Liquidity_Update();
     }
 
-    //现货/合约 交易，用X买Y input为X
+    //现货/合约 交易，用X买Y input为 delta：用户支付的X值，perp：是否为合约交易，output为 Yget：用户支付的X值所能换出的Y值
     function Trade_XtoY(uint delta, bool perp) internal lock returns(uint Yget) {
         uint deltaX = delta;
         bool check = true;
         while(check == true){
-
+            //计算此时曲线内触发跨tick的X值
             uint X_Coord_Test = Math.cal_times(Xeq , Tick_range , const18);
+
+            //计算对应的Y值
             uint Y_Coord_Test = Math.cal_Y(B, C, D, X_Coord_Test);
 
+            //检测当前输入deltaX是否大于跨tick所需X
             if(deltaX > Math.cal_cross(X_Coord_Test, X_Coord, Peqx)){
-
+                
+                //计算累加跨tick前所需X能换得的Y
                 Yget += Math.cal_cross(Y_Coord, Y_Coord_Test, Peqy);
+
+                //deltaX减少跨tick所用的这部分X
                 deltaX -= Math.cal_cross(X_Coord_Test, X_Coord, Peqx);
+
+                //如果是perp交易，则累加系统内总的Y Position
                 if(perp == true) {
                     Ygetp += Math.cal_cross(Y_Coord, Y_Coord_Test, Peqy);
+                
+                //如果是现货 按这一小笔交易（即跨tick所需X -> Y）的进出更新 X和Y的实际资产存量
                 }else{
                     True_Liquid_X += Math.cal_cross(X_Coord_Test, X_Coord, Peqx);
                     True_Liquid_Y -= Math.cal_cross(Y_Coord, Y_Coord_Test, Peqy);
                 }
 
+                // 按照跨tick后系统状态更新Peqx Peqy
                 Peqy = Math.cal_times(Peqy , Yeq , Y_Coord_Test);
                 Peqx = Math.cal_times(Peqx , Xeq , X_Coord_Test);
+
+                //计算跨tick后的曲线斜率所对应的Price_local
                 Price_local = Math.cal_times2 (Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test) , Y_Coord_Test , Xeq , X_Coord_Test , Yeq );
                 
+                //更新 跨tick后X Y坐标
                 X_Coord = Xeq;
                 Y_Coord = Yeq;
+
+                //计算此时对应的B C值
                 B = Math.cal_B(X_Coord, Y_Coord, D, Price_local);
                 C = 2 * const18 - B; 
+
+                //根据新的各参数 更正流动性
                 Virtual_Liquidity_Update();
+
+                //将更新流动性后的参数传入曲线
                 X_Coord = Xeq;
                 Y_Coord = Yeq;
 
             }else{
+                //记录此时的X Y坐标
                 X_Coord_Last = X_Coord;
                 Y_Coord_Last = Y_Coord;
+
+                //按剩余deltaX 更新X Y坐标
                 X_Coord +=  Math.cal_times(deltaX , Peqx , const18);
                 Y_Coord = Math.cal_Y(B, C, D, X_Coord);
+
+                //计算累加这部分X能换得的Y
                 Yget += Math.cal_cross(Y_Coord_Last, Y_Coord, Peqy);
+
+                //如果是perp交易，则累加系统内总的Y Position
                 if(perp == true){
                     Ygetp += Math.cal_cross(Y_Coord_Last, Y_Coord, Peqy);
+
+                //如果是现货 按这一小笔交易的进出更新 X和Y的实际资产存量
                 }else{
                     True_Liquid_X += deltaX;
                     True_Liquid_Y -= Math.cal_cross(Y_Coord_Last, Y_Coord, Peqy);
@@ -191,20 +220,28 @@ contract Pool is QilinERC20{
         }
     }
 
-    //现货/合约 交易，用X买Y，input为Y
+    //现货/合约 交易，用X买Y，input为 delta：所需的目标Y值， Xmax：用户可以支付的X值上限，perp：是否是合约交易，output为Xin：为换出所需Y值，用户所要支付的精确X值
     function TradeXToExactY(uint delta, uint Xmax, bool perp) internal lock returns(uint Xin) {
         uint deltaY = delta;
         bool check = true;
         while(check == true){
-
+            
+            //计算此时曲线内触发跨tick的X值
             uint X_Coord_Test = Math.cal_times(Xeq , Tick_range , const18);
+
+            //计算对应的Y值
             uint Y_Coord_Test = Math.cal_Y(B, C, D, X_Coord_Test);
 
+            //检测所需Y值是否大于跨tick会换出的Y值
             if(deltaY > Math.cal_cross(Y_Coord, Y_Coord_Test, Peqy)){
-                uint P_test = Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test);
 
+                //累加所需精确X输入值
                 Xin += Math.cal_cross(X_Coord_Test, X_Coord, Peqx);
+
+                //减少对应的目标Y值
                 deltaY -= Math.cal_cross(Y_Coord, Y_Coord_Test, Peqy);
+
+                //检测是否为合约交易，是的话更改总position参数，不是的话更改真实流动性参数
                 if(perp == true){
                     Ygetp += Math.cal_cross(Y_Coord, Y_Coord_Test, Peqy);
                 }else{
@@ -212,6 +249,8 @@ contract Pool is QilinERC20{
                     True_Liquid_Y -=  Math.cal_cross(Y_Coord, Y_Coord_Test, Peqy);
                 }
 
+
+                // 按照跨tick后系统状态更新Peqx Peqy  计算跨tick后的曲线斜率所对应的Price_local
                 Peqy = Math.cal_times(Peqy , Yeq , Y_Coord_Test);
                 Peqx = Math.cal_times(Peqx , Xeq , X_Coord_Test);
                 Price_local = Math.cal_times2 (Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test) , Y_Coord_Test , Xeq , X_Coord_Test , Yeq );
@@ -239,6 +278,7 @@ contract Pool is QilinERC20{
                 check = false;
             }
         }
+        //对于 现货交易，需检测 计算出的所需X输入值是否小于用户能支付的X值上限
         if(perp == false) require(Xmax > Xin);
     }
 
@@ -252,8 +292,6 @@ contract Pool is QilinERC20{
             uint X_Coord_Test = Math.cal_X(B, C, D, Y_Coord_Test);
 
             if(deltaY > Math.cal_cross(Y_Coord_Test, Y_Coord, Peqy)){
-
-                uint P_test = Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test);
 
                 Xget += Math.cal_cross(X_Coord, X_Coord_Test, Peqx);
                 deltaY -= Math.cal_cross(Y_Coord_Test, Y_Coord, Peqy);
@@ -303,7 +341,6 @@ contract Pool is QilinERC20{
             uint X_Coord_Test = Math.cal_X(B, C, D, Y_Coord_Test);
 
             if(deltaX > Math.cal_cross(X_Coord, X_Coord_Test, Peqx)){
-                uint P_test = Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test);
 
                 Yin += Math.cal_cross(Y_Coord_Test, Y_Coord, Peqy);
                 deltaX -= Math.cal_cross(X_Coord, X_Coord_Test, Peqx);
@@ -344,21 +381,29 @@ contract Pool is QilinERC20{
         if(perp == false) require(Ymax > Yin);
     }
 
-    // 总的swap function 不支持闪电贷
+    // 总的swap function 现货交易时调用  input为 to：资产输出地址 ，Xout：用户所需Y to exact X 的精准X输出值， Yout：用户所需X to exact Y 的精准X输出值；如果Xout&Yout均为0，则代表用户无需exact，只需将输入资产全部输出即可
     function swap(address to, uint256 Xout, uint256 Yout) external lock{
-        require(Xout == 0 || Yout == 0, 'QIlin: INVALID_OUT');
+
+        //检测，Xout和Yout不可同时大于0
+        require(Xout == 0 || Yout == 0);
         // require(to != tokenX && to != tokenY, 'Qilin: INVALID_TO');  不是很理解
-        uint balanceX = IERC20(tokenX).balanceOf(address(this));
-        uint balanceY = IERC20(tokenY).balanceOf(address(this));
-        uint amountXIn = balanceX - True_Liquid_X;
-        uint amountYIn = balanceY - True_Liquid_Y;
-        require(amountXIn > 0 || amountYIn > 0, 'Qilin: INSUFFICIENT_INPUT_AMOUNT');
+
+        //检测用户转入池的资产量
+        uint amountXIn = IERC20(tokenX).balanceOf(address(this)) - True_Liquid_X;
+        uint amountYIn = IERC20(tokenY).balanceOf(address(this)) - True_Liquid_Y;
+        require(amountXIn > 0 || amountYIn > 0);
+
+        //Xout大于0则代表Y to exact X，并将剩余Y转出
         if(Xout > 0){
             _safeTransfer(tokenY, to, amountYIn - TradeYToExactX(Xout, amountYIn, false));
             _safeTransfer(tokenX, to, Xout);
+
+        //Yout大于0则代表X to exact Y，并将剩余X转出
         }else if(Yout > 0){
             _safeTransfer(tokenX, to, amountXIn - TradeXToExactY(Yout, amountXIn, false));
             _safeTransfer(tokenY, to, Yout);
+
+        //都为0则将用户转入资产全部swap并转出
         }else{
             if(amountXIn > 0) _safeTransfer(tokenY, to, Trade_XtoY(amountXIn, false));
             if(amountYIn > 0) _safeTransfer(tokenX, to, Trade_YtoX(amountYIn, false));
@@ -465,7 +510,7 @@ contract Pool is QilinERC20{
     //}
     
 
-    //平仓 待修改 默认只有X资产是白名单内
+    //平仓 
     function Perp_close(uint delta_X, uint delta_Y, address userID) public lock {
         require(delta_X * delta_Y == 0 && delta_X + delta_Y > 0 && Net_Margin(userID) + Net_Position(userID) > Net_debt(userID) && delta_X <= debt_index[userID][false].position_amount && delta_Y <= debt_index[userID][true].position_amount);
         refresh_totalbook();
@@ -504,7 +549,7 @@ contract Pool is QilinERC20{
 
     //清算 待修改
     function Liquidate(address userID, address _to) external lock {
-        require(Net_Margin(userID) + Net_Position(userID) <= Net_debt(userID) || Net_Margin(userID) + Net_Position(userID) - Net_debt(userID) <= Net_Position(userID) * Liquidation_rate, 'Qilin: FORBIDDEN');
+        require(Net_Margin(userID) + Net_Position(userID) <= Net_debt(userID) || Net_Margin(userID) + Net_Position(userID) - Net_debt(userID) <= Net_Position(userID) * Liquidation_rate);
         _safeTransfer(tokenX, _to ,  margin_index[userID][0] * Liquidation_bonus);
         _safeTransfer(tokenY, _to ,  margin_index[userID][1] * Liquidation_bonus);
         delete margin_index[userID]; //
@@ -517,53 +562,46 @@ contract Pool is QilinERC20{
     //加保证金
     function Add_Margin(address tokenID, address userID) public {
         uint new_margin;
-        if(tokenID == tokenX){
-            new_margin = IERC20(tokenID).balanceOf(address(this)) - True_Liquid_X - Margin_reserve[0];
-            margin_index[userID][0] += new_margin;
-            Margin_reserve[0] += new_margin;
-        }else{
+        if(tokenID == tokenY && Two_white == true){
             new_margin = IERC20(tokenID).balanceOf(address(this)) - True_Liquid_Y - Margin_reserve[1];
             margin_index[userID][1] += new_margin;
             Margin_reserve[1] += new_margin;
+        }else{
+            new_margin = IERC20(tokenID).balanceOf(address(this)) - True_Liquid_X - Margin_reserve[0];
+            margin_index[userID][0] += new_margin;
+            Margin_reserve[0] += new_margin;
         }
     } 
 
     //提取保证金
     function WithdrawMargin (address userID , address tokenID, address to, uint amount) internal lock{
         if(tokenID == tokenX){
-            require(margin_index[userID][0] > amount, 'NOT ENOUGH MARGIN');
+            require(margin_index[userID][0] > amount);
             margin_index[userID][0] -= amount;
         }else{
-            require(margin_index[userID][1] > amount, 'NOT ENOUGH MARGIN');
+            require(margin_index[userID][1] > amount);
             margin_index[userID][1] -= amount;
         }
-
-
-        require(Net_Margin(userID) + Net_Position(userID) > Net_debt(userID) && Net_Margin(userID) + Net_Position(userID) - Net_debt(userID) > Net_Position(userID) * Liquidation_rate, 'MARGIN TOO LOW');
+        require(Net_Margin(userID) + Net_Position(userID) > Net_debt(userID) && Net_Margin(userID) + Net_Position(userID) - Net_debt(userID) > Net_Position(userID) * Liquidation_rate);
         _safeTransfer(tokenID, to, amount);
     }
 
-    //留端口设置虚拟流动性杠杆上限
-    function Set_LeverageMax(uint L) external {
-        require(msg.sender == factory, 'Qilin: FORBIDDEN');
-        Leverage_Max = L;
-    }
 
     //留端口设置保证金杠杆上限
     function Set_LeverageMargin(uint L) external {
-        require(msg.sender == factory, 'Qilin: FORBIDDEN');
+        require(msg.sender == factory);
         Leverage_Margin = L;
     }
 
     //留端口设置funding rate上限
     function Set_fundingrate_upper(uint f) external {
-        require(msg.sender == factory, 'Qilin: FORBIDDEN');
+        require(msg.sender == factory);
         funding_x_8h_upper = f;
     }
 
-    //留端口设置 清算线
+    //留端口设置 维持保证金率
     function Set_Liquidation_rate(uint rate) external{
-        require(msg.sender == factory, 'Qilin: FORBIDDEN');
+        require(msg.sender == factory);
         Liquidation_rate = rate;
     }
 

@@ -99,6 +99,26 @@ library Math {
     }
 
 
+    // 获取资金费率
+    function Getfundingrate (uint True_Liquid_X , uint True_Liquid_Y , uint Peqx , uint Peqy , uint B, uint D ,uint X_Coord , uint Y_Coord , uint Ygetp , uint Xgetp , uint Base_rate) internal pure returns(uint256 funding_x , bool paying_side){
+        uint256 XE = Math.cal_times( True_Liquid_X , Peqx , 1e18 );
+        uint256 YE = Math.cal_times( True_Liquid_Y , Peqy , 1e18 );
+        uint256 BE = Math.cal_B_f(XE, YE, D);
+        uint256 CE = 2 * 1e18 - BE;
+        uint256 PE = Math.cal_times( Math.cal_price(BE, CE, D, XE, YE) , Peqy , Peqx );
+        uint256 PS = Math.cal_times( Math.cal_price(B, 2 * 1e18 - B, D, X_Coord, Y_Coord) , Peqy , Peqx );
+        if(PS > PE){
+            uint256 interest_rate = Math.cal_interest(Ygetp , True_Liquid_Y , Base_rate);
+            funding_x = Math.cal_cross(PS , PE , PE) / 5760 + interest_rate;
+            paying_side = false;
+        }else{
+            uint256 interest_rate = Math.cal_interest(Xgetp , True_Liquid_X , Base_rate);
+            funding_x = Math.cal_cross(PE , PS , PE) / 5760 + interest_rate;
+            paying_side = true;
+        }
+    }
+
+
 
 
 

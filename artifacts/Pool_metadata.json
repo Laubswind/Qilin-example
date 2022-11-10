@@ -449,19 +449,6 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "L",
-						"type": "uint256"
-					}
-				],
-				"name": "Set_LeverageMax",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
 						"name": "rate",
 						"type": "uint256"
 					}
@@ -1222,10 +1209,10 @@
 			]
 		},
 		"Qilin/Qilin_Pool.sol": {
-			"keccak256": "0x4dc92beba37e9633bea8b7212c3b2191af5b73beffd232be3a15551baa598245",
+			"keccak256": "0xb24aceb28bf34bd01a54bdd55c083d0f534c50f0a91889807d80c398114b3f0f",
 			"urls": [
-				"bzz-raw://b9b54aeab3f7aa6a9febce37ec58ce7a2fd9863f388a00704dec26bceb9cfc41",
-				"dweb:/ipfs/QmXiBPRutvvgQ51XGak5du5fZN37qngKk6kimxmWKgta8D"
+				"bzz-raw://470dd9833d4809b5e6bde57f186260f5ed22ed8b7b0b7ffa82de478881501cfc",
+				"dweb:/ipfs/QmTLv11qWCeHSpovBw7YVwVqnK1PbKXyfJjxC4HCTtTETx"
 			]
 		},
 		"Qilin/interface/IERC20.sol": {
@@ -1264,10 +1251,10 @@
 			]
 		},
 		"Qilin/libraries/Math.sol": {
-			"keccak256": "0x72b6456e4adbdc11cc4d63049a199a33721a3e7768444900050fb77bd3364f08",
+			"keccak256": "0xa84cfe28728b0c5f05a1235bd547d53e42fb861bfceda3e1670184a03cbb6392",
 			"urls": [
-				"bzz-raw://8a2a73b97f1d5afe49a99d8d898933f3448ab41c0188f6202559eceb96355a86",
-				"dweb:/ipfs/QmWXsAj9UxsdDqw5x4f1siu5oru3MPEVycMYYSLY6rXwyG"
+				"bzz-raw://b5841f50a7f04de72bcc23271c8095b6df156cceaa4a3531bd955b681491b419",
+				"dweb:/ipfs/QmfSrEUvdZ7xtaUQ6pwfBESDxF6w45J9ETCWfzHUvaWX1C"
 			]
 		},
 		"Qilin/libraries/Safemath.sol": {
