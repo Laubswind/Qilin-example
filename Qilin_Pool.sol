@@ -86,19 +86,19 @@ contract Pool is QilinERC20{
 
     // 获取资金费率
     function Getfundingrate () internal view returns(uint256 funding_x , bool paying_side){
-        uint256 XE = True_Liquid_X * Peqx / const18;
-        uint256 YE = True_Liquid_Y * Peqy / const18;
+        uint256 XE = Math.cal_times( True_Liquid_X , Peqx , const18 );
+        uint256 YE = Math.cal_times( True_Liquid_Y , Peqy , const18 );
         uint256 BE = Math.cal_B_f(XE, YE, D);
-        uint256 CE = 2* const18 - BE;
-        uint256 PE = Math.cal_price(BE, CE, D, XE, YE) * Peqy / Peqx;
-        uint256 PS = Math.cal_price(B, C, D, X_Coord, Y_Coord) * Peqy / Peqx;
+        uint256 CE = 2 * const18 - BE;
+        uint256 PE = Math.cal_times( Math.cal_price(BE, CE, D, XE, YE) , Peqy , Peqx );
+        uint256 PS = Math.cal_times( Math.cal_price(B, C, D, X_Coord, Y_Coord) , Peqy , Peqx );
         if(PS > PE){
             uint256 interest_rate = Math.cal_interest(Ygetp , True_Liquid_Y , Base_rate);
-            funding_x = (PS-PE) * const18 / PE / 5760 + interest_rate;
+            funding_x = Math.cal_cross(PS , PE , PE) / 5760 + interest_rate;
             paying_side = false;
         }else{
             uint256 interest_rate = Math.cal_interest(Xgetp , True_Liquid_X , Base_rate);
-            funding_x = (PE-PS) * const18 / PE / 5760 + interest_rate;
+            funding_x = Math.cal_cross(PE , PS , PE) / 5760 + interest_rate;
             paying_side = true;
         }
         if(funding_x * 1920 > funding_x_8h_upper){
@@ -108,8 +108,8 @@ contract Pool is QilinERC20{
 
     // 虚拟流动性更新
     function Virtual_Liquidity_Update() internal {
-        N = Math.cbrt((True_Liquid_X * B * Peqx + Peqy * C * True_Liquid_Y) * True_Liquid_X * True_Liquid_Y * const18 * const18 / (True_Liquid_X0 * B * Peqx + Peqy * C * True_Liquid_Y0) / True_Liquid_X0 / True_Liquid_Y0);
-        D = D0 * N / const18 / const18;
+        N = Math.cal_N(True_Liquid_X , B , Peqx , True_Liquid_Y , C , Peqy , True_Liquid_X0 , True_Liquid_Y0); 
+        D = D0 * N / const18;
         Xeq = D/2;
         Yeq = Xeq;
         N_Last = N;
@@ -117,9 +117,9 @@ contract Pool is QilinERC20{
 
     // 添加流动性
     function Add_Liquidity(uint AddX , uint AddY , address to) external lock returns(uint Liquidity){
-        X_Coord = X_Coord * (True_Liquid_X + AddX) / True_Liquid_X;
-        Y_Coord = Y_Coord * (True_Liquid_Y + AddY) / True_Liquid_Y;
-        Liquidity = Total_Liquidity * AddX / True_Liquid_X;
+        X_Coord = Math.cal_times(X_Coord , (True_Liquid_X + AddX) , True_Liquid_X );
+        Y_Coord = Math.cal_times(Y_Coord , (True_Liquid_Y + AddY) , True_Liquid_Y );
+        Liquidity = Math.cal_times (Total_Liquidity , AddX , True_Liquid_X );
         Total_Liquidity = Total_Liquidity + Liquidity;
         True_Liquid_X = True_Liquid_X + AddX;
         True_Liquid_Y = True_Liquid_Y + AddY;
@@ -129,10 +129,10 @@ contract Pool is QilinERC20{
 
     // 撤出流动性
     function Burn_Liquidity(uint Liquidity , address to) external lock returns(uint BurX , uint BurY){
-        BurX = Liquidity * True_Liquid_X / Total_Liquidity;
-        BurY = Liquidity * True_Liquid_Y / Total_Liquidity;
-        X_Coord = X_Coord * (True_Liquid_X - BurX) / True_Liquid_X;
-        Y_Coord = Y_Coord * (True_Liquid_Y - BurY) / True_Liquid_Y;
+        BurX = Math.cal_times(Liquidity , True_Liquid_X , Total_Liquidity );
+        BurY = Math.cal_times(Liquidity , True_Liquid_Y , Total_Liquidity );
+        X_Coord = Math.cal_times(X_Coord , (True_Liquid_X - BurX) , True_Liquid_X );
+        Y_Coord = Math.cal_times(Y_Coord , (True_Liquid_Y - BurY) , True_Liquid_Y );
         True_Liquid_X = True_Liquid_X - BurX;
         True_Liquid_Y = True_Liquid_Y - BurY;
         Total_Liquidity = Total_Liquidity - Liquidity;
@@ -148,7 +148,7 @@ contract Pool is QilinERC20{
         bool check = true;
         while(check == true){
 
-            uint X_Coord_Test = Xeq * Tick_range / const18; 
+            uint X_Coord_Test = Math.cal_times(Xeq , Tick_range , const18);
             uint Y_Coord_Test = Math.cal_Y(B, C, D, X_Coord_Test);
 
             if(deltaX > Math.cal_cross(X_Coord_Test, X_Coord, Peqx)){
@@ -162,9 +162,9 @@ contract Pool is QilinERC20{
                     True_Liquid_Y -= Math.cal_cross(Y_Coord, Y_Coord_Test, Peqy);
                 }
 
-                Peqy = Peqy * Yeq / Y_Coord_Test;
-                Peqx = Peqx * Xeq / X_Coord_Test;
-                Price_local = Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test) * Y_Coord_Test * Xeq / X_Coord_Test / Yeq;
+                Peqy = Math.cal_times(Peqy , Yeq , Y_Coord_Test);
+                Peqx = Math.cal_times(Peqx , Xeq , X_Coord_Test);
+                Price_local = Math.cal_times2 (Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test) , Y_Coord_Test , Xeq , X_Coord_Test , Yeq );
                 
                 X_Coord = Xeq;
                 Y_Coord = Yeq;
@@ -177,7 +177,7 @@ contract Pool is QilinERC20{
             }else{
                 X_Coord_Last = X_Coord;
                 Y_Coord_Last = Y_Coord;
-                X_Coord +=  deltaX * Peqx / const18;
+                X_Coord +=  Math.cal_times(deltaX , Peqx , const18);
                 Y_Coord = Math.cal_Y(B, C, D, X_Coord);
                 Yget += Math.cal_cross(Y_Coord_Last, Y_Coord, Peqy);
                 if(perp == true){
@@ -197,7 +197,7 @@ contract Pool is QilinERC20{
         bool check = true;
         while(check == true){
 
-            uint X_Coord_Test = Xeq * Tick_range / const18;
+            uint X_Coord_Test = Math.cal_times(Xeq , Tick_range , const18);
             uint Y_Coord_Test = Math.cal_Y(B, C, D, X_Coord_Test);
 
             if(deltaY > Math.cal_cross(Y_Coord, Y_Coord_Test, Peqy)){
@@ -212,9 +212,9 @@ contract Pool is QilinERC20{
                     True_Liquid_Y -=  Math.cal_cross(Y_Coord, Y_Coord_Test, Peqy);
                 }
 
-                Peqy = Peqy * Yeq / Y_Coord_Test;
-                Peqx = Peqx * Xeq / X_Coord_Test;
-                Price_local = P_test * Y_Coord_Test * Xeq / X_Coord_Test / Yeq;
+                Peqy = Math.cal_times(Peqy , Yeq , Y_Coord_Test);
+                Peqx = Math.cal_times(Peqx , Xeq , X_Coord_Test);
+                Price_local = Math.cal_times2 (Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test) , Y_Coord_Test , Xeq , X_Coord_Test , Yeq );
                 
                 X_Coord = Xeq;
                 Y_Coord = Yeq;
@@ -227,7 +227,7 @@ contract Pool is QilinERC20{
             }else{
                 X_Coord_Last = X_Coord;
                 Y_Coord_Last = Y_Coord;
-                Y_Coord -= deltaY * Peqy / const18;
+                Y_Coord -= Math.cal_times(deltaY , Peqy , const18);
                 X_Coord = Math.cal_X(B, C, D, Y_Coord);
                 Xin += Math.cal_cross(X_Coord, X_Coord_Last, Peqx);
                 if(perp == true){
@@ -248,7 +248,7 @@ contract Pool is QilinERC20{
         bool check = true;
         while(check == true){
 
-            uint Y_Coord_Test = Xeq * Tick_range / const18;
+            uint Y_Coord_Test = Math.cal_times(Yeq , Tick_range , const18);
             uint X_Coord_Test = Math.cal_X(B, C, D, Y_Coord_Test);
 
             if(deltaY > Math.cal_cross(Y_Coord_Test, Y_Coord, Peqy)){
@@ -264,9 +264,9 @@ contract Pool is QilinERC20{
                     True_Liquid_Y += Math.cal_cross(Y_Coord_Test, Y_Coord, Peqy);
                 }
 
-                Peqy = Peqy * Yeq / Y_Coord_Test;
-                Peqx = Peqx * Xeq / X_Coord_Test;
-                Price_local = P_test * Y_Coord_Test * Xeq / X_Coord_Test / Yeq;
+                Peqy = Math.cal_times(Peqy , Yeq , Y_Coord_Test);
+                Peqx = Math.cal_times(Peqx , Xeq , X_Coord_Test);
+                Price_local = Math.cal_times2 (Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test) , Y_Coord_Test , Xeq , X_Coord_Test , Yeq );
                 
                 X_Coord = Xeq;
                 Y_Coord = Yeq;
@@ -279,7 +279,7 @@ contract Pool is QilinERC20{
             }else{
                 X_Coord_Last = X_Coord;
                 Y_Coord_Last = Y_Coord;
-                Y_Coord += deltaY * Peqy / const18;
+                Y_Coord += Math.cal_times(deltaY , Peqy , const18);
                 X_Coord = Math.cal_X(B, C, D, Y_Coord);
                 Xget += Math.cal_cross(X_Coord_Last, X_Coord, Peqx);
                 if(perp == true){
@@ -299,7 +299,7 @@ contract Pool is QilinERC20{
         bool check = true;
         while(check == true){
 
-            uint Y_Coord_Test = Yeq * Tick_range / const18;
+            uint Y_Coord_Test = Math.cal_times(Yeq , Tick_range , const18);
             uint X_Coord_Test = Math.cal_X(B, C, D, Y_Coord_Test);
 
             if(deltaX > Math.cal_cross(X_Coord, X_Coord_Test, Peqx)){
@@ -314,9 +314,9 @@ contract Pool is QilinERC20{
                     True_Liquid_X -=  Math.cal_cross(X_Coord, X_Coord_Test, Peqx);
                 }
 
-                Peqy = Peqy * Yeq / Y_Coord_Test;
-                Peqx = Peqx * Xeq / X_Coord_Test;
-                Price_local = P_test * Y_Coord_Test * Xeq / X_Coord_Test / Yeq;
+                Peqy = Math.cal_times(Peqy , Yeq , Y_Coord_Test);
+                Peqx = Math.cal_times(Peqx , Xeq , X_Coord_Test);
+                Price_local = Math.cal_times2 (Math.cal_price(B, C, D, X_Coord_Test, Y_Coord_Test) , Y_Coord_Test , Xeq , X_Coord_Test , Yeq );
                 
                 X_Coord = Xeq;
                 Y_Coord = Yeq;
@@ -329,7 +329,7 @@ contract Pool is QilinERC20{
             }else{
                 X_Coord_Last = X_Coord;
                 Y_Coord_Last = Y_Coord;
-                X_Coord -= deltaX * Peqx / const18;
+                X_Coord -= Math.cal_times(deltaX , Peqx , const18);
                 Y_Coord = Math.cal_Y(B, C, D, X_Coord);
                 Yin += Math.cal_cross(Y_Coord, Y_Coord_Last, Peqy);
                 if(perp == true){
@@ -380,25 +380,24 @@ contract Pool is QilinERC20{
 
     mapping(address => uint[2]) public margin_index;  //将用户address与存储其保证金的数组对应
 
-    mapping(address => uint) public margin_type; //将保证金白名单token address与其在数组中的序列对应
 
 
 
 
     //求保证金净值
     function Net_Margin(address userID) internal view returns(uint net){
-        net = margin_index[userID][0] + margin_index[userID][1] * Price_local * Peqy / Peqx / const18;
+        net = margin_index[userID][0] + Math.cal_times2(margin_index[userID][1] ,  Price_local , Peqy , Peqx , const18);
         
     }
 
     //求仓位净值 注：36位
     function Net_Position(address userID) internal view returns(uint net){
-        net = debt_index[userID][false].position_amount * const18 + debt_index[userID][true].position_amount * Price_local * Peqy / Peqx / const18;
+        net = debt_index[userID][false].position_amount * const18 + Math.cal_times2(debt_index[userID][true].position_amount , Price_local , Peqy , Peqx , const18 );
     }
 
     //求债务净值
     function Net_debt(address userID) internal view returns(uint net){
-        net = debt_index[userID][true].debttoken_amount * Total_debt_Y / Total_debttoken_Y + debt_index[userID][false].debttoken_amount * Total_debt_X / Total_debttoken_X * Price_local * Peqy / Peqx / const18;
+        net = Math.cal_times(debt_index[userID][true].debttoken_amount ,  Total_debt_Y , Total_debttoken_Y) + Math.cal_times( Math.cal_times2(debt_index[userID][false].debttoken_amount ,  Total_debt_X , Price_local , Total_debttoken_X , const18) , Peqy , Peqx);
     }
 
     //更新debt总账
@@ -406,13 +405,13 @@ contract Pool is QilinERC20{
         (uint funding_x , bool paying_side) = Getfundingrate();
         uint time_gap = block.number - fundingtime_Last;
         fundingtime_Last = block.number;
-        uint price = Price_local * Peqy / Peqx;
+        uint price = Math.cal_times(Price_local , Peqy , Peqx);
         if(paying_side_Last == false){
-            Total_debt_X = Total_debt_X * (const18 + funding_Last) * time_gap / const18;
-            Total_debt_Y = Total_debt_Y - funding_Last * Total_debt_X * time_gap * price / const18 / const18;
+            Total_debt_X = Math.cal_times2(Total_debt_X , (const18 + funding_Last) , time_gap , const18 , 1);
+            Total_debt_Y = Total_debt_Y - Math.cal_times2(funding_Last , Total_debt_X , price , const18 , const18) * time_gap;
         }else{
-            Total_debt_Y = Total_debt_Y * (const18 + funding_Last) * time_gap / const18;
-            Total_debt_X = Total_debt_X - funding_Last * Total_debt_Y * time_gap / price;
+            Total_debt_Y = Math.cal_times2(Total_debt_Y , (const18 + funding_Last) , time_gap , const18 , 1);
+            Total_debt_X = Total_debt_X - Math.cal_times2(funding_Last , Total_debt_Y , time_gap , price , 1);
         }
         funding_Last = funding_x; 
         paying_side_Last = paying_side;
@@ -423,7 +422,7 @@ contract Pool is QilinERC20{
     function Perp_open(uint delta_X, uint delta_Y, bool XtoY, address userID) public lock{
         require(delta_X * delta_Y == 0 && delta_X + delta_Y > 0);
         refresh_totalbook(); 
-        require((Net_Margin(userID) +  Net_Position(userID) - Net_debt(userID)) / Leverage_Margin > Math.max (delta_X * const18 + Net_Position(userID), delta_Y * Price_local * Peqy / Peqx + Net_Position(userID)),'Qilin: NOT ENOUGH MARGIN');
+        require((Net_Margin(userID) +  Net_Position(userID) - Net_debt(userID)) / Leverage_Margin > Math.max (delta_X * const18 + Net_Position(userID), Math.cal_times2(delta_Y , Price_local , Peqy , Peqx , 1) + Net_Position(userID)),'Qilin: NOT ENOUGH MARGIN');
         uint256 Out;
         uint256 In;
         if(XtoY == true){
@@ -434,9 +433,9 @@ contract Pool is QilinERC20{
                 Out = delta_Y;
                 In = TradeXToExactY(delta_Y , 0 , true);
             }
-            debt_index[userID][false].debttoken_amount += In * Total_debttoken_X / Total_debt_X;
+            debt_index[userID][false].debttoken_amount += Math.cal_times(In , Total_debttoken_X , Total_debt_X);
             debt_index[userID][true].position_amount += Out;
-            Total_debttoken_X = In * Total_debttoken_X / Total_debt_X + Total_debttoken_X;
+            Total_debttoken_X = Math.cal_times(In , Total_debttoken_X , Total_debt_X) + Total_debttoken_X;
             Total_debt_X += In ;
         }else{
             if(delta_X > 0){
@@ -446,24 +445,24 @@ contract Pool is QilinERC20{
                 Out = Trade_YtoX(delta_Y , true);
                 In = delta_Y;
             }
-            debt_index[userID][true].debttoken_amount += In * Total_debttoken_Y / Total_debt_Y;
+            debt_index[userID][true].debttoken_amount += Math.cal_times(In , Total_debttoken_Y , Total_debt_Y);
             debt_index[userID][false].position_amount += Out;
-            Total_debttoken_Y = In * Total_debttoken_Y / Total_debt_Y + Total_debttoken_Y;
+            Total_debttoken_Y = Math.cal_times(In , Total_debttoken_Y , Total_debt_Y) + Total_debttoken_Y;
             Total_debt_Y += In ;
         }
     }
 
     //一键 多空双开
-    function Perp_biopen(uint delta_X, uint delta_Y, address userID) external lock{
-        require(delta_X * delta_Y == 0 && delta_X + delta_Y > 0);
-        if(delta_X > 0){
-            Perp_open(delta_X , 0 , true , userID);
-            Perp_open(delta_X , 0 , false, userID);
-        }else{
-            Perp_open(0 , delta_Y , true , userID);
-            Perp_open(0 , delta_Y , false, userID);
-        }
-    }
+    //function Perp_biopen(uint delta_X, uint delta_Y, address userID) external lock{
+    //    require(delta_X * delta_Y == 0 && delta_X + delta_Y > 0);
+    //    if(delta_X > 0){
+    //        Perp_open(delta_X , 0 , true , userID);
+    //        Perp_open(delta_X , 0 , false, userID);
+    //    }else{
+    //        Perp_open(0 , delta_Y , true , userID);
+    //        Perp_open(0 , delta_Y , false, userID);
+    //    }
+    //}
     
 
     //平仓 待修改 默认只有X资产是白名单内
@@ -472,11 +471,11 @@ contract Pool is QilinERC20{
         refresh_totalbook();
         if(delta_X > 0){   
             uint Get = Trade_XtoY(delta_X , true);
-            uint Y_close = delta_X * debt_index[userID][true].debttoken_amount * Total_debt_Y / Total_debttoken_Y / debt_index[userID][false].position_amount ;
+            uint Y_close = Math.cal_times2(delta_X , debt_index[userID][true].debttoken_amount , Total_debt_Y , Total_debttoken_Y , debt_index[userID][false].position_amount) ;
             debt_index[userID][false].position_amount -= delta_X;
             Total_debt_Y -= Y_close ; 
-            Total_debttoken_Y -= debt_index[userID][true].debttoken_amount * delta_X / debt_index[userID][false].position_amount ;
-            debt_index[userID][true].debttoken_amount -= debt_index[userID][true].debttoken_amount * delta_X / debt_index[userID][false].position_amount;
+            Total_debttoken_Y -= Math.cal_times(debt_index[userID][true].debttoken_amount , delta_X , debt_index[userID][false].position_amount) ;
+            debt_index[userID][true].debttoken_amount -= Math.cal_times(debt_index[userID][true].debttoken_amount , delta_X , debt_index[userID][false].position_amount);
 
             if(Get > Y_close && Two_white == false){
                 margin_index[userID][0] += Trade_YtoX(Get - Y_close , false);
@@ -488,11 +487,11 @@ contract Pool is QilinERC20{
             }
         }else{
             uint Get = Trade_YtoX(delta_Y , true);
-            uint X_close = delta_Y * debt_index[userID][false].debttoken_amount * Total_debt_X / Total_debttoken_X / debt_index[userID][true].position_amount ;
+            uint X_close = Math.cal_times2(delta_Y , debt_index[userID][false].debttoken_amount , Total_debt_X , Total_debttoken_X , debt_index[userID][true].position_amount) ;
             debt_index[userID][true].position_amount -= delta_Y;
             Total_debt_X -= X_close ; 
-            Total_debttoken_X -= debt_index[userID][false].debttoken_amount * delta_Y / debt_index[userID][true].position_amount ;
-            debt_index[userID][false].debttoken_amount -= debt_index[userID][false].debttoken_amount * delta_Y / debt_index[userID][true].position_amount;
+            Total_debttoken_X -= Math.cal_times(debt_index[userID][false].debttoken_amount , delta_Y , debt_index[userID][true].position_amount) ;
+            debt_index[userID][false].debttoken_amount -= Math.cal_times(debt_index[userID][false].debttoken_amount , delta_Y , debt_index[userID][true].position_amount);
             
             if(margin_index[userID][0] + Get > X_close){
                 margin_index[userID][0] = margin_index[userID][0] + Get - X_close;
@@ -522,7 +521,7 @@ contract Pool is QilinERC20{
             new_margin = IERC20(tokenID).balanceOf(address(this)) - True_Liquid_X - Margin_reserve[0];
             margin_index[userID][0] += new_margin;
             Margin_reserve[0] += new_margin;
-        }else if(tokenID == tokenY){
+        }else{
             new_margin = IERC20(tokenID).balanceOf(address(this)) - True_Liquid_Y - Margin_reserve[1];
             margin_index[userID][1] += new_margin;
             Margin_reserve[1] += new_margin;
@@ -531,8 +530,15 @@ contract Pool is QilinERC20{
 
     //提取保证金
     function WithdrawMargin (address userID , address tokenID, address to, uint amount) internal lock{
-        require(margin_index[userID][margin_type[tokenID]] > amount, 'NOT ENOUGH MARGIN');
-        margin_index[userID][margin_type[tokenID]] -= amount;
+        if(tokenID == tokenX){
+            require(margin_index[userID][0] > amount, 'NOT ENOUGH MARGIN');
+            margin_index[userID][0] -= amount;
+        }else{
+            require(margin_index[userID][1] > amount, 'NOT ENOUGH MARGIN');
+            margin_index[userID][1] -= amount;
+        }
+
+
         require(Net_Margin(userID) + Net_Position(userID) > Net_debt(userID) && Net_Margin(userID) + Net_Position(userID) - Net_debt(userID) > Net_Position(userID) * Liquidation_rate, 'MARGIN TOO LOW');
         _safeTransfer(tokenID, to, amount);
     }

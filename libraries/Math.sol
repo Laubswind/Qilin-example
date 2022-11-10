@@ -1,6 +1,6 @@
 pragma solidity ^0.8.4;
 
-// a library for performing various math operations
+// a library for pDrforming various math opDrations
 
 library Math {
 
@@ -78,23 +78,29 @@ library Math {
         D = (A - B) * 1e18 / C;
     }
 
-    struct param{
-        uint TX;
-        uint TY;
-        uint PX;
-        uint PY;
-        uint XP;
-        uint YP;
-        uint _B;
-        uint _C;
-        uint _D;
-        uint _M;
-        uint XC;
-        uint YC;
-        uint BR;
-        uint FU;
+    // 计算N值第一步 
+    function cal_multi(uint A, uint B, uint C, uint D, uint E, uint F) internal pure returns(uint I){
+        I = ( A * B * C + D * E * F ) * A * D;
     }
-    
+
+    //计算N值
+    function cal_N(uint A, uint B, uint C, uint D, uint E, uint F , uint G , uint H) internal pure returns(uint z){
+        z = cbrt(cal_multi(A, B, C, D, E, F) * 1e54 / cal_multi(G, B, C, H, E, F));
+    }
+
+    //
+    function cal_times(uint A, uint B, uint C) internal pure returns (uint F) {
+        F = A * B / C ;
+
+    }
+
+    function cal_times2(uint A, uint B, uint C, uint D, uint E) internal pure returns (uint F) {
+        F = A * B * C / D / E;
+    }
+
+
+
+
 
     
 }

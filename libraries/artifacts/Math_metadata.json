@@ -33,10 +33,10 @@
 	},
 	"sources": {
 		"Qilin/libraries/Math.sol": {
-			"keccak256": "0xeb2fe870d537519b4bc155358d4b7c06eafa6ceba327d22faabe18b8705f4d1f",
+			"keccak256": "0x72b6456e4adbdc11cc4d63049a199a33721a3e7768444900050fb77bd3364f08",
 			"urls": [
-				"bzz-raw://da4373b137d71fd20143ceb11fef6ecaffa20703085543e238d53fb54a31739a",
-				"dweb:/ipfs/QmVDTooJTdXVZTfjRsKcuvMzshJLpkrb4Sx82SFnuPvaWG"
+				"bzz-raw://8a2a73b97f1d5afe49a99d8d898933f3448ab41c0188f6202559eceb96355a86",
+				"dweb:/ipfs/QmWXsAj9UxsdDqw5x4f1siu5oru3MPEVycMYYSLY6rXwyG"
 			]
 		}
 	},
