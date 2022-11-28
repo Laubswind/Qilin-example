@@ -1,0 +1,547 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"addLiquidity(uint256,uint256,address)": "87b21efc",
+			"burnLiquidity(uint256,address)": "7e401aca",
+			"delegateAddMargin(address,address)": "3fbb0e9b",
+			"delegateLiquidate(address,address)": "db35944f",
+			"delegatePerpClose(uint256,uint256,address)": "eeea909f",
+			"delegatePerpOpen(uint256,uint256,bool,address)": "4bac6c47",
+			"delegateWithdrawMargin(address,address,address,uint256)": "e0ba7223",
+			"initialize(address,address,uint256,uint256,address)": "57fb25cc",
+			"setBaserate(uint256)": "b66179de",
+			"setFundingrateUpper(uint256)": "ade446d2",
+			"setLeverageMargin(uint256)": "2f1d9842",
+			"setLiquidationBonus(uint256)": "28842d4f",
+			"setLiquidationRate(uint256)": "9cc8df77",
+			"setLogicAddress(address)": "fdcfc3ef",
+			"setPerpFee(uint256)": "4582b988",
+			"setSwapFee(uint256)": "34e19907",
+			"setTickrange(uint256)": "7bb1128a",
+			"skim(address)": "bc25cf77",
+			"swap(address,uint256,uint256)": "9f1d0f59",
+			"updateMargintypes(bool)": "2dafca56"
+		}
+	},
+	"abi": [
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "sender",
+					"type": "address"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "amountX",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "amountY",
+					"type": "uint256"
+				},
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				}
+			],
+			"name": "Burn",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "sender",
+					"type": "address"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "amountX",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "amountY",
+					"type": "uint256"
+				}
+			],
+			"name": "Mint",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "sender",
+					"type": "address"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "amountXIn",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "amountYIn",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "amountXOut",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "amountYOut",
+					"type": "uint256"
+				},
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				}
+			],
+			"name": "Swap",
+			"type": "event"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "addX",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "addY",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				}
+			],
+			"name": "addLiquidity",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "liquidity",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "liquidity",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				}
+			],
+			"name": "burnLiquidity",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "burnX",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "burnY",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "tokenID",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "userID",
+					"type": "address"
+				}
+			],
+			"name": "delegateAddMargin",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "userID",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_to",
+					"type": "address"
+				}
+			],
+			"name": "delegateLiquidate",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "deltaX",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "deltaY",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "userID",
+					"type": "address"
+				}
+			],
+			"name": "delegatePerpClose",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "deltaX",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "deltaY",
+					"type": "uint256"
+				},
+				{
+					"internalType": "bool",
+					"name": "XtoY",
+					"type": "bool"
+				},
+				{
+					"internalType": "address",
+					"name": "userID",
+					"type": "address"
+				}
+			],
+			"name": "delegatePerpOpen",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "userID",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "tokenID",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "delegateWithdrawMargin",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_tokenX",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_tokenY",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "addX",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "addY",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				}
+			],
+			"name": "initialize",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_baserate",
+					"type": "uint256"
+				}
+			],
+			"name": "setBaserate",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "f",
+					"type": "uint256"
+				}
+			],
+			"name": "setFundingrateUpper",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "L",
+					"type": "uint256"
+				}
+			],
+			"name": "setLeverageMargin",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_rate",
+					"type": "uint256"
+				}
+			],
+			"name": "setLiquidationBonus",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "rate",
+					"type": "uint256"
+				}
+			],
+			"name": "setLiquidationRate",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "addr",
+					"type": "address"
+				}
+			],
+			"name": "setLogicAddress",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_perpFee",
+					"type": "uint256"
+				}
+			],
+			"name": "setPerpFee",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_swapFee",
+					"type": "uint256"
+				}
+			],
+			"name": "setSwapFee",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_tickrange",
+					"type": "uint256"
+				}
+			],
+			"name": "setTickrange",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				}
+			],
+			"name": "skim",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "Xout",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "Yout",
+					"type": "uint256"
+				}
+			],
+			"name": "swap",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bool",
+					"name": "_twoWhite",
+					"type": "bool"
+				}
+			],
+			"name": "updateMargintypes",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	]
+}

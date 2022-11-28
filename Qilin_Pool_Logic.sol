@@ -71,10 +71,12 @@ contract PoolLogic{
         unlocked = 1;
     }
 
+    /* ========== EVENTS ========== */
+
     /* ========== VIEWS ========== */
 
     // 虚拟流动性更新
-    function _virtualLiquidityUpdate() public view returns (uint _D){
+    function _virtualLiquidityUpdate() internal view returns (uint _D){
         uint N = Math.calN(trueLiquidX , B , peqX , trueLiquidY , 2 * 1e18 - B , peqY , trueLiquidX0 , trueLiquidY0); 
         _D = D0 * N / const18;
     }
@@ -106,7 +108,7 @@ contract PoolLogic{
 
 
     //现货/合约 交易，用X买Y input为 delta：用户支付的X值，perp：是否为合约交易，output为 Yget：用户支付的X值所能换出的Y值
-    function tradeXToY(uint deltaX, bool perp, uint exactY) internal lock returns(uint Yget) {
+    function _tradeXToY(uint deltaX, bool perp, uint exactY) internal lock returns(uint Yget) {
 
         uint Xin;
         while(deltaX - Xin > Math.calCross(Math.calTimes(D/2 , tickrange , const18), coordX, peqX)){
@@ -172,7 +174,7 @@ contract PoolLogic{
     }
 
     //现货/合约  交易，用Y买X input为Y
-    function tradeYToX(uint deltaY , bool perp , uint exactX) internal lock returns(uint Xget) {
+    function _tradeYToX(uint deltaY , bool perp , uint exactX) internal lock returns(uint Xget) {
 
         uint Yin;
         while(deltaY - Yin > Math.calCross(Math.calTimes(D/2 , tickrange , const18), coordY, peqY)){
@@ -247,11 +249,11 @@ contract PoolLogic{
         uint256 In;
         if(XtoY == true){
             if(deltaX > 0){
-                Out = tradeXToY(deltaX , true , 0);
+                Out = _tradeXToY(deltaX , true , 0);
                 In = deltaX;
             }else{
                 Out = deltaY;
-                In = tradeXToY(deltaY * const18 / Math.calTimes(priceLocal , peqY , peqX) , true , deltaY );//
+                In = _tradeXToY(deltaY * const18 / Math.calTimes(priceLocal , peqY , peqX) , true , deltaY );//
             }
             debtIndex[userID][false].debttokenAmount += Math.calTimes(In , totalDebttokenX , totalDebtX);
             debtIndex[userID][true].positionAmount += Out;
@@ -264,16 +266,16 @@ contract PoolLogic{
                 uint _gap;
                 _gap = In * perpFee / 1e18 - marginIndex[userID][0];
                 marginIndex[userID][0] = 0;
-                _gap = tradeYToX( marginIndex[userID][1] , false , _gap );
+                _gap = _tradeYToX( marginIndex[userID][1] , false , _gap );
                 marginIndex[userID][1] -= _gap;
                 trueLiquidY += _gap;
             }
         }else{
             if(deltaX > 0){
                 Out = deltaX;
-                In = tradeYToX( deltaX * Math.calTimes(priceLocal , peqY , peqX) / const18 , true , deltaX );//
+                In = _tradeYToX( deltaX * Math.calTimes(priceLocal , peqY , peqX) / const18 , true , deltaX );//
             }else{
-                Out = tradeYToX(deltaY , true , 0);
+                Out = _tradeYToX(deltaY , true , 0);
                 In = deltaY;
             }////
             debtIndex[userID][true].debttokenAmount += Math.calTimes(In , totalDebttokenY , totalDebtY);
@@ -287,7 +289,7 @@ contract PoolLogic{
                 uint _gap;
                 _gap = In * perpFee / 1e18 - marginIndex[userID][1];
                 marginIndex[userID][1] = 0;
-                _gap = tradeXToY( marginIndex[userID][0] , false , _gap );
+                _gap = _tradeXToY( marginIndex[userID][0] , false , _gap );
                 marginIndex[userID][0] -= _gap;
                 trueLiquidX += _gap;
             }
@@ -312,7 +314,7 @@ contract PoolLogic{
         require(deltaX * deltaY == 0 && deltaX + deltaY > 0 && netMargin(userID) + netPosition(userID) > netDebt(userID) && deltaX <= debtIndex[userID][false].positionAmount && deltaY <= debtIndex[userID][true].positionAmount);
         _refreshTotalbook();
         if(deltaX > 0){   
-            uint Get = tradeXToY(deltaX , true , 0);
+            uint Get = _tradeXToY(deltaX , true , 0);
             uint Y_close = Math.calTimes2(deltaX , debtIndex[userID][true].debttokenAmount , totalDebtY , totalDebttokenY , debtIndex[userID][false].positionAmount) ;
             debtIndex[userID][false].positionAmount -= deltaX;
             totalDebtY -= Y_close ; 
@@ -320,15 +322,15 @@ contract PoolLogic{
             debtIndex[userID][true].debttokenAmount -= Math.calTimes(debtIndex[userID][true].debttokenAmount , deltaX , debtIndex[userID][false].positionAmount);
 
             if(Get > Y_close && twoWhite == false){
-                marginIndex[userID][0] += tradeYToX(Get - Y_close , false , 0);
+                marginIndex[userID][0] += _tradeYToX(Get - Y_close , false , 0);
             }else if(marginIndex[userID][1] + Get > Y_close && twoWhite == true){
                 marginIndex[userID][1] = marginIndex[userID][1] + Get - Y_close;
             }else{
-                marginIndex[userID][0] = marginIndex[userID][0] - tradeXToY( marginIndex[userID][0], false , Y_close - Get - marginIndex[userID][1]);
+                marginIndex[userID][0] = marginIndex[userID][0] - _tradeXToY( marginIndex[userID][0], false , Y_close - Get - marginIndex[userID][1]);
                 marginIndex[userID][1] = 0;
             }
         }else{
-            uint Get = tradeYToX(deltaY , true , 0);
+            uint Get = _tradeYToX(deltaY , true , 0);
             uint X_close = Math.calTimes2(deltaY , debtIndex[userID][false].debttokenAmount , totalDebtX , totalDebttokenX , debtIndex[userID][true].positionAmount) ;
             debtIndex[userID][true].positionAmount -= deltaY;
             totalDebtX -= X_close ; 
@@ -338,7 +340,7 @@ contract PoolLogic{
             if(marginIndex[userID][0] + Get > X_close){
                 marginIndex[userID][0] = marginIndex[userID][0] + Get - X_close;
             }else{
-                marginIndex[userID][1] = marginIndex[userID][1] - tradeYToX( marginIndex[userID][1], false , X_close - Get - marginIndex[userID][0]);
+                marginIndex[userID][1] = marginIndex[userID][1] - _tradeYToX( marginIndex[userID][1], false , X_close - Get - marginIndex[userID][0]);
                 marginIndex[userID][0] = 0;
             }
         }
@@ -360,7 +362,7 @@ contract PoolLogic{
     }/////
 
     //加保证金
-    function addMargin(uint newMargin , address tokenID , address userID) public {
+    function addMargin(uint newMargin , address tokenID , address userID) external lock {
         if(tokenID == tokenY && twoWhite == true){
             newMargin = newMargin - trueLiquidY - marginReserve[1];
             marginIndex[userID][1] += newMargin;
@@ -373,7 +375,7 @@ contract PoolLogic{
     }//
 
     //提取保证金
-    function withdrawMargin (address userID , address tokenID, address to, uint amount) internal lock{
+    function withdrawMargin (address userID , address tokenID, address to, uint amount) external lock {
         if(tokenID == tokenX){
             require(marginIndex[userID][0] > amount);
             marginIndex[userID][0] -= amount;

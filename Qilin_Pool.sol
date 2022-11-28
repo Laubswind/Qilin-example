@@ -83,11 +83,22 @@ contract Pool is QilinERC20{
         _;
     }
 
+    /* ========== EVENTS ========== */
+    event Mint(address indexed sender, uint amountX, uint amountY);
+    event Burn(address indexed sender, uint amountX, uint amountY, address indexed to);
+    event Swap(
+        address indexed sender,
+        uint amountXIn,
+        uint amountYIn,
+        uint amountXOut,
+        uint amountYOut,
+        address indexed to
+    );
 
     /* ========== VIEWS ========== */
 
     // 虚拟流动性更新
-    function _virtualLiquidityUpdate() public view returns (uint _D){
+    function _virtualLiquidityUpdate() internal view returns (uint _D){
         uint N = Math.calN(trueLiquidX , B , peqX , trueLiquidY , 2 * 1e18 - B , peqY , trueLiquidX0 , trueLiquidY0); 
         _D = D0 * N / const18;
     }
@@ -147,9 +158,9 @@ contract Pool is QilinERC20{
     }//
 
     //现货/合约 交易，用X买Y input为 delta：用户支付的X值，perp：是否为合约交易，output为 Yget：用户支付的X值所能换出的Y值
-    function delegateTradeXtoY(uint deltaX , bool perp , uint exactY) internal lock returns(uint) {
+    function _delegateTradeXtoY(uint deltaX , bool perp , uint exactY) internal lock returns(uint) {
         (bool success, bytes memory data) = _addr.delegatecall(
-            abi.encodeWithSignature("TradeXtoY(uint , bool , uint)", deltaX , perp , exactY)
+            abi.encodeWithSignature("_tradeXToY(uint , bool , uint)", deltaX , perp , exactY)
         );
         return abi.decode(data, (uint));
             
@@ -157,9 +168,9 @@ contract Pool is QilinERC20{
     }
 
     //现货/合约  交易，用Y买X input为Y
-    function delegateTradeYtoX(uint deltaY , bool perp , uint exactX) internal lock returns(uint) {
+    function _delegateTradeYtoX(uint deltaY , bool perp , uint exactX) internal lock returns(uint) {
         (bool success, bytes memory data) = _addr.delegatecall(
-            abi.encodeWithSignature("TradeYtoX(uint , bool , uint)", deltaY , perp , exactX)
+            abi.encodeWithSignature("_tradeYToX(uint , bool , uint)", deltaY , perp , exactX)
         );
         return abi.decode(data, (uint));
         
@@ -182,18 +193,18 @@ contract Pool is QilinERC20{
              
         //Xout大于0则代表Y to exact X，并将剩余Y转出
         if(Xout > 0){
-            _safeTransfer(tokenY, to, amountYIn - delegateTradeYtoX(amountYIn , false , Xout));
+            _safeTransfer(tokenY, to, amountYIn - _delegateTradeYtoX(amountYIn , false , Xout));
             _safeTransfer(tokenX, to, Xout);
 
         //Yout大于0则代表X to exact Y，并将剩余X转出
         }else if(Yout > 0){
-            _safeTransfer(tokenX, to, amountXIn - delegateTradeXtoY(amountXIn , false , Yout));
+            _safeTransfer(tokenX, to, amountXIn - _delegateTradeXtoY(amountXIn , false , Yout));
             _safeTransfer(tokenY, to, Yout);
 
         //都为0则将用户转入资产全部swap并转出
         }else{
-            if(amountXIn > 0) _safeTransfer(tokenY, to, delegateTradeXtoY(amountXIn , false , 0));
-            if(amountYIn > 0) _safeTransfer(tokenX, to, delegateTradeYtoX(amountYIn , false , 0));
+            if(amountXIn > 0) _safeTransfer(tokenY, to, _delegateTradeXtoY(amountXIn , false , 0));
+            if(amountYIn > 0) _safeTransfer(tokenX, to, _delegateTradeYtoX(amountYIn , false , 0));
         }
         trueLiquidX += amountXIn * swapFee / (1e18 - swapFee) ;
         trueLiquidY += amountYIn * swapFee / (1e18 - swapFee) ;
@@ -202,7 +213,7 @@ contract Pool is QilinERC20{
 
 
     //开仓 不允许多空同时开仓
-    function delegatePerpOpen( uint deltaX, uint deltaY, bool XtoY, address userID) public lock{
+    function delegatePerpOpen( uint deltaX, uint deltaY, bool XtoY, address userID) external lock{
         (bool success, bytes memory data) = _addr.delegatecall(
             abi.encodeWithSignature("perpOpen(uint , uint , bool , address)", deltaX , deltaY , XtoY , userID)
         );
@@ -222,7 +233,7 @@ contract Pool is QilinERC20{
     
 
     //平仓 
-    function delegatePerpClose(uint deltaX, uint deltaY, address userID) public lock {
+    function delegatePerpClose(uint deltaX, uint deltaY, address userID) external lock {
         (bool success, bytes memory data) = _addr.delegatecall(
             abi.encodeWithSignature("perpClose(uint , uint ,  address)", deltaX , deltaY ,  userID)
         );
@@ -237,7 +248,7 @@ contract Pool is QilinERC20{
 
     
     //加保证金
-    function delegateAddMargin(address tokenID, address userID) public {
+    function delegateAddMargin(address tokenID, address userID) external {
         uint new_margin;
         new_margin = IERC20(tokenID).balanceOf(address(this));
         (bool success, bytes memory data) = _addr.delegatecall(
@@ -246,7 +257,7 @@ contract Pool is QilinERC20{
     }//
 
     //提取保证金
-    function delegateWithdrawMargin (address userID , address tokenID, address to, uint amount) internal lock{
+    function delegateWithdrawMargin (address userID , address tokenID, address to, uint amount) external lock{
         (bool success, bytes memory data) = _addr.delegatecall(
             abi.encodeWithSignature("withdrawMargin(address , address , address , amount)", userID , tokenID , to , amount)
         );
