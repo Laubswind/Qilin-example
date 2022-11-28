@@ -12,194 +12,12 @@
 			},
 			{
 				"inputs": [],
-				"name": "Base_rate",
+				"name": "baserate",
 				"outputs": [
 					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Get_Liquidation_bonus",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "rate",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Get_baserate",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "baserate",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Get_margintypes",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "two_white",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Get_perpfee",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "perpfee",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Get_swapfee",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "swapfee",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Get_tickrange",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "tickrange",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Liquidation_bonus",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "rate",
-						"type": "uint256"
-					}
-				],
-				"name": "Set_Liquidation_bonus",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "baserate",
-						"type": "uint256"
-					}
-				],
-				"name": "Set_baserate",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "perpfee",
-						"type": "uint256"
-					}
-				],
-				"name": "Set_perpfee",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "swapfee",
-						"type": "uint256"
-					}
-				],
-				"name": "Set_swapfee",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "tickrange",
-						"type": "uint256"
-					}
-				],
-				"name": "Set_tickrange",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Tick_range",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Two_white",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -220,7 +38,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "perp_fee",
+				"name": "getBaserate",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -233,7 +51,85 @@
 			},
 			{
 				"inputs": [],
-				"name": "swap_fee",
+				"name": "getLiquidationBonus",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getMargintypes",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getPerpFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getSwapFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getTickrange",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "liquidationBonus",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "perpFee",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -247,12 +143,116 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_baserate",
+						"type": "uint256"
+					}
+				],
+				"name": "setBaserate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_rate",
+						"type": "uint256"
+					}
+				],
+				"name": "setLiquidationBonus",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_perpFee",
+						"type": "uint256"
+					}
+				],
+				"name": "setPerpFee",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_swapFee",
+						"type": "uint256"
+					}
+				],
+				"name": "setSwapFee",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tickrange",
+						"type": "uint256"
+					}
+				],
+				"name": "setTickrange",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "swapFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tickrange",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "twoWhite",
+				"outputs": [
+					{
 						"internalType": "bool",
-						"name": "two_white",
+						"name": "",
 						"type": "bool"
 					}
 				],
-				"name": "update_margintypes",
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "_twoWhite",
+						"type": "bool"
+					}
+				],
+				"name": "updateMargintypes",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -271,7 +271,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Qilin/Qilin_global_parameters.sol": "global"
+			"Test/Qilin_global_parameters.sol": "global"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -285,11 +285,11 @@
 		"remappings": []
 	},
 	"sources": {
-		"Qilin/Qilin_global_parameters.sol": {
-			"keccak256": "0x559e44fca5c356719a6123d9ec91503c5f4d1711e38d519b2cb74d5b15af9564",
+		"Test/Qilin_global_parameters.sol": {
+			"keccak256": "0xb6984ea93174cc2c8903f7040e5401f97625e10ede1c18bce427dd2165b3ae3d",
 			"urls": [
-				"bzz-raw://c48877d3196939655173fbf00da0b2c94143d020e3cee9be301de24ea4da4aa2",
-				"dweb:/ipfs/QmegTmpBr2n7ZEBQ1u1RjpgFETz9qxcyQLZnij7tG711aA"
+				"bzz-raw://79e15087188d0a07e3b64ce9fd1e23385d981b446038e3660a15087b09495dc2",
+				"dweb:/ipfs/QmctRgMkpnTsyFxFQShUnRM9B23Nej4EyC8WFZMhtFonaj"
 			]
 		}
 	},

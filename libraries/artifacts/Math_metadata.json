@@ -18,7 +18,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Qilin/libraries/Math.sol": "Math"
+			"Test/libraries/Math.sol": "Math"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -32,11 +32,67 @@
 		"remappings": []
 	},
 	"sources": {
-		"Qilin/libraries/Math.sol": {
-			"keccak256": "0x38efc10396794f184e4fd17cdbdd93c79302134e148d1123018906e52a9dc7ce",
+		"Test/QilinERC20.sol": {
+			"keccak256": "0xcf03a2fa2893a9c52dd8cd59a2752e47a5da36187a4f1ef874a6454f44748d07",
 			"urls": [
-				"bzz-raw://1d133fbe884f288606330734a793b895de7b82b358cfb020dbdb008c6a03f1ce",
-				"dweb:/ipfs/QmecJdhZbEbQdbVGsYJSNKK1BinhDJbNBACt5o6tKVJq4b"
+				"bzz-raw://f37000e7d69ff56771224dd0df2dcee6ec17e1cb930d839ba27764e93f42ca08",
+				"dweb:/ipfs/QmYB3i1sTFNzbf245RV51iqrLPrDpKkqHuQqGjaWwe7LaD"
+			]
+		},
+		"Test/Qilin_Pool.sol": {
+			"keccak256": "0x6609aab32327ddf9501c79c0ce5ef38afd63686a5eddeb4f04b2fddaf9a2abb4",
+			"urls": [
+				"bzz-raw://4957740e54182a70206efe431da5853d57b754094a2fa3f2685c84281affa601",
+				"dweb:/ipfs/QmQtvH1N3HdLinotppUFE6QmoPhhHt89Z87znNP1QZhwn9"
+			]
+		},
+		"Test/interface/IERC20.sol": {
+			"keccak256": "0x41d78140d76d3f4b6527cbb8657b4fcac125c5dbe4cc5228ad78369e7630e310",
+			"urls": [
+				"bzz-raw://a4970e871a091f06cce6b62d527b10d262f05d6e45161f5c59abfaad16691875",
+				"dweb:/ipfs/QmZ3YFz8WtfLJfQCswbfoQwHRNieo9fgSSzJkdq2XrtdSm"
+			]
+		},
+		"Test/interface/IQilinERC20.sol": {
+			"keccak256": "0x7be71c5b3f764f71319092ca8d8b416d9b977943369b3727b0659109e5e0e3a6",
+			"urls": [
+				"bzz-raw://6316ef912010835844a51977850dd6efbd142ef66273caf8abd70b197900959f",
+				"dweb:/ipfs/QmdgQbwyf9KARi7pXr6yxu5YRdDcvvSevqZrqFPjZrXjSd"
+			]
+		},
+		"Test/interface/IQilin_Callee.sol": {
+			"keccak256": "0xb465ade55da0ed667c49e78bc701c2f0b8e46da31a32b691b807865bfeef1212",
+			"urls": [
+				"bzz-raw://1cbc66ca5fb737544436bbab8f4781022401fb6b99e4c008862f9de3df0eb3bc",
+				"dweb:/ipfs/QmekPSoyYhsJaLbsNiYjZE92npVQBPN3zDmGc8FYAjvmws"
+			]
+		},
+		"Test/interface/IQilin_Factory.sol": {
+			"keccak256": "0x4739c99a16a779bb6ca42432fdd9e67c99fe38ba81935649e9109ca27fcb090f",
+			"urls": [
+				"bzz-raw://1017371a421e5617d1e895514d288bb5f999ee41dc32b55d8663c04626034267",
+				"dweb:/ipfs/QmTxDh1em4Z1c6aGBBPo4LDT6CtADR6QsfEU8dUodKBnbL"
+			]
+		},
+		"Test/interface/IQilin_Pool.sol": {
+			"keccak256": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+			"urls": [
+				"bzz-raw://0000000000000000000000000000000000000000000000000000000000000000",
+				"dweb:/ipfs/QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH"
+			]
+		},
+		"Test/libraries/Math.sol": {
+			"keccak256": "0xd753f25df3382a98b64e9df24ed1259ad2f59e9d737390b16f49889876a98120",
+			"urls": [
+				"bzz-raw://c8dc53d76461f0394cd2b0fa0a43e4b31a9c013e5d707df5b84eab4962fc728a",
+				"dweb:/ipfs/Qmc1baid2KNN2ySDMwvc9AJCDMcwKJjeeP8Y89EMj1LMNR"
+			]
+		},
+		"Test/libraries/Safemath.sol": {
+			"keccak256": "0xe92f3aa56d7863251bb6106fff4008c0ff5ad7a9f34e1c143d48f9f1be06f94c",
+			"urls": [
+				"bzz-raw://ee22aea0f6fae65466bc63a495dd4e515360492d09d770541019bfe0a4571817",
+				"dweb:/ipfs/QmTqp2bWB4b5tQGD9bLZhgsYbXyx7xZCn3Vh7Vutiz34dg"
 			]
 		}
 	},

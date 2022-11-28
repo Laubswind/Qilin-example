@@ -61,110 +61,8 @@
 				"type": "event"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "AddX",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "AddY",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					}
-				],
-				"name": "Add_Liquidity",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "Liquidity",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "tokenID",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "userID",
-						"type": "address"
-					}
-				],
-				"name": "Add_Margin",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "B",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Base_rate",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "Liquidity",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					}
-				],
-				"name": "Burn_Liquidity",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "BurX",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "BurY",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "C",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -216,95 +114,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "Leverage_Margin",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Leverage_Max",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "userID",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_to",
-						"type": "address"
-					}
-				],
-				"name": "Liquidate",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Liquidation_bonus",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Liquidation_rate",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "Margin_reserve",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "PERMIT_TYPEHASH",
 				"outputs": [
 					{
@@ -318,12 +127,12 @@
 			},
 			{
 				"inputs": [],
-				"name": "Peqx",
+				"name": "_addr",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "address",
 						"name": "",
-						"type": "uint256"
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -331,11 +140,11 @@
 			},
 			{
 				"inputs": [],
-				"name": "Peqy",
+				"name": "_virtualLiquidityUpdate",
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "_D",
 						"type": "uint256"
 					}
 				],
@@ -346,329 +155,29 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "delta_X",
+						"name": "addX",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "delta_Y",
+						"name": "addY",
 						"type": "uint256"
 					},
 					{
 						"internalType": "address",
-						"name": "userID",
+						"name": "to",
 						"type": "address"
 					}
 				],
-				"name": "Perp_close",
-				"outputs": [],
+				"name": "addLiquidity",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "liquidity",
+						"type": "uint256"
+					}
+				],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "delta_X",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "delta_Y",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "XtoY",
-						"type": "bool"
-					},
-					{
-						"internalType": "address",
-						"name": "userID",
-						"type": "address"
-					}
-				],
-				"name": "Perp_open",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Price_local",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "L",
-						"type": "uint256"
-					}
-				],
-				"name": "Set_LeverageMargin",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "rate",
-						"type": "uint256"
-					}
-				],
-				"name": "Set_Liquidation_rate",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "f",
-						"type": "uint256"
-					}
-				],
-				"name": "Set_fundingrate_upper",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Tick_range",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Total_Liquidity",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Total_debt_X",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Total_debt_Y",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Total_debttoken_X",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Total_debttoken_Y",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "True_Liquid_X",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "True_Liquid_X0",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "True_Liquid_Y",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "True_Liquid_Y0",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "X_Coord",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Xeq",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Xgetp",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Y_Coord",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Yeq",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "Ygetp",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "_swap",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "amountXIn",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amountYIn",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -740,7 +249,75 @@
 			},
 			{
 				"inputs": [],
+				"name": "baserate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "liquidity",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					}
+				],
+				"name": "burnLiquidity",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "burnX",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "burnY",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "const18",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "coordX",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "coordY",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -764,7 +341,7 @@
 						"type": "bool"
 					}
 				],
-				"name": "debt_index",
+				"name": "debtIndex",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -778,12 +355,12 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "debttoken_amount",
+						"name": "debttokenAmount",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "position_amount",
+						"name": "positionAmount",
 						"type": "uint256"
 					}
 				],
@@ -804,6 +381,93 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "tokenID",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "userID",
+						"type": "address"
+					}
+				],
+				"name": "delegateAddMargin",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "userID",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "delegateLiquidate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "deltaX",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deltaY",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "userID",
+						"type": "address"
+					}
+				],
+				"name": "delegatePerpClose",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "deltaX",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deltaY",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "XtoY",
+						"type": "bool"
+					},
+					{
+						"internalType": "address",
+						"name": "userID",
+						"type": "address"
+					}
+				],
+				"name": "delegatePerpOpen",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "factory",
 				"outputs": [
@@ -818,7 +482,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "fee",
+				"name": "getpX",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -831,33 +495,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "funding_Last",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "funding_x_8h_upper",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "fundingtime_Last",
+				"name": "getpY",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -879,11 +517,104 @@
 						"internalType": "address",
 						"name": "_tokenY",
 						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "addX",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "addY",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
 					}
 				],
 				"name": "initialize",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "lastFunding",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "lastFundingTime",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "lastPayingSide",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "leverageMax",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "liquidationBonus",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "liquidationRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -899,7 +630,39 @@
 						"type": "uint256"
 					}
 				],
-				"name": "margin_index",
+				"name": "marginIndex",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "marginLeverage",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "marginReserve",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -944,12 +707,25 @@
 			},
 			{
 				"inputs": [],
-				"name": "paying_side_Last",
+				"name": "peqX",
 				"outputs": [
 					{
-						"internalType": "bool",
+						"internalType": "uint256",
 						"name": "",
-						"type": "bool"
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "peqY",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -999,6 +775,149 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "perpFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "priceLocal",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_baserate",
+						"type": "uint256"
+					}
+				],
+				"name": "setBaserate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "f",
+						"type": "uint256"
+					}
+				],
+				"name": "setFundingrateUpper",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "L",
+						"type": "uint256"
+					}
+				],
+				"name": "setLeverageMargin",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_rate",
+						"type": "uint256"
+					}
+				],
+				"name": "setLiquidationBonus",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "rate",
+						"type": "uint256"
+					}
+				],
+				"name": "setLiquidationRate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					}
+				],
+				"name": "setLogicAddress",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_perpFee",
+						"type": "uint256"
+					}
+				],
+				"name": "setPerpFee",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_swapFee",
+						"type": "uint256"
+					}
+				],
+				"name": "setSwapFee",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tickrange",
+						"type": "uint256"
+					}
+				],
+				"name": "setTickrange",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -1012,6 +931,42 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "Xout",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "Yout",
+						"type": "uint256"
+					}
+				],
+				"name": "swap",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "swapFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "symbol",
 				"outputs": [
@@ -1019,6 +974,19 @@
 						"internalType": "string",
 						"name": "",
 						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tickrange",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -1045,6 +1013,71 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalDebtX",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalDebtY",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalDebttokenX",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalDebttokenY",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalLiquidity",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -1115,6 +1148,97 @@
 				],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "trueLiquidX",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "trueLiquidX0",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "trueLiquidY",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "trueLiquidY0",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "twoWhite",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "_twoWhite",
+						"type": "bool"
+					}
+				],
+				"name": "updateMargintypes",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "upperFunding8H",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -1130,7 +1254,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Qilin/Qilin_Pool.sol": "Pool"
+			"Test/Qilin_Pool.sol": "Pool"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -1144,63 +1268,63 @@
 		"remappings": []
 	},
 	"sources": {
-		"Qilin/QilinERC20.sol": {
+		"Test/QilinERC20.sol": {
 			"keccak256": "0xcf03a2fa2893a9c52dd8cd59a2752e47a5da36187a4f1ef874a6454f44748d07",
 			"urls": [
 				"bzz-raw://f37000e7d69ff56771224dd0df2dcee6ec17e1cb930d839ba27764e93f42ca08",
 				"dweb:/ipfs/QmYB3i1sTFNzbf245RV51iqrLPrDpKkqHuQqGjaWwe7LaD"
 			]
 		},
-		"Qilin/Qilin_Pool.sol": {
-			"keccak256": "0xdf60b7aa90f68640fc19e210f2c7f7f6d2a1b357fb1f64e3c235cca3b0f8cc03",
+		"Test/Qilin_Pool.sol": {
+			"keccak256": "0x994f920957608381f9d9321cf2caaf6a90691dbb308ab7acc1500c053aac881b",
 			"urls": [
-				"bzz-raw://d94d3686ab9f5f95eacde0bcbccac32d8193641e82712af0856d950c57342c90",
-				"dweb:/ipfs/QmR1hQZpg1pGJ4Aen4FVTzfbhsajDo599SzcPxButwYCCn"
+				"bzz-raw://38174a6c7b0b060b25cce782b74fc272d0251436a765e0d77250c2645ae7117e",
+				"dweb:/ipfs/QmSMLi835g7YEA8SzNy7MxMDy43Y1b68FnTZpWB384kmEw"
 			]
 		},
-		"Qilin/interface/IERC20.sol": {
+		"Test/interface/IERC20.sol": {
 			"keccak256": "0x41d78140d76d3f4b6527cbb8657b4fcac125c5dbe4cc5228ad78369e7630e310",
 			"urls": [
 				"bzz-raw://a4970e871a091f06cce6b62d527b10d262f05d6e45161f5c59abfaad16691875",
 				"dweb:/ipfs/QmZ3YFz8WtfLJfQCswbfoQwHRNieo9fgSSzJkdq2XrtdSm"
 			]
 		},
-		"Qilin/interface/IQilinERC20.sol": {
+		"Test/interface/IQilinERC20.sol": {
 			"keccak256": "0x7be71c5b3f764f71319092ca8d8b416d9b977943369b3727b0659109e5e0e3a6",
 			"urls": [
 				"bzz-raw://6316ef912010835844a51977850dd6efbd142ef66273caf8abd70b197900959f",
 				"dweb:/ipfs/QmdgQbwyf9KARi7pXr6yxu5YRdDcvvSevqZrqFPjZrXjSd"
 			]
 		},
-		"Qilin/interface/IQilin_Callee.sol": {
+		"Test/interface/IQilin_Callee.sol": {
 			"keccak256": "0xb465ade55da0ed667c49e78bc701c2f0b8e46da31a32b691b807865bfeef1212",
 			"urls": [
 				"bzz-raw://1cbc66ca5fb737544436bbab8f4781022401fb6b99e4c008862f9de3df0eb3bc",
 				"dweb:/ipfs/QmekPSoyYhsJaLbsNiYjZE92npVQBPN3zDmGc8FYAjvmws"
 			]
 		},
-		"Qilin/interface/IQilin_Factory.sol": {
+		"Test/interface/IQilin_Factory.sol": {
 			"keccak256": "0x4739c99a16a779bb6ca42432fdd9e67c99fe38ba81935649e9109ca27fcb090f",
 			"urls": [
 				"bzz-raw://1017371a421e5617d1e895514d288bb5f999ee41dc32b55d8663c04626034267",
 				"dweb:/ipfs/QmTxDh1em4Z1c6aGBBPo4LDT6CtADR6QsfEU8dUodKBnbL"
 			]
 		},
-		"Qilin/interface/IQilin_Pool.sol": {
+		"Test/interface/IQilin_Pool.sol": {
 			"keccak256": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
 			"urls": [
 				"bzz-raw://0000000000000000000000000000000000000000000000000000000000000000",
 				"dweb:/ipfs/QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH"
 			]
 		},
-		"Qilin/libraries/Math.sol": {
-			"keccak256": "0x38efc10396794f184e4fd17cdbdd93c79302134e148d1123018906e52a9dc7ce",
+		"Test/libraries/Math.sol": {
+			"keccak256": "0xd753f25df3382a98b64e9df24ed1259ad2f59e9d737390b16f49889876a98120",
 			"urls": [
-				"bzz-raw://1d133fbe884f288606330734a793b895de7b82b358cfb020dbdb008c6a03f1ce",
-				"dweb:/ipfs/QmecJdhZbEbQdbVGsYJSNKK1BinhDJbNBACt5o6tKVJq4b"
+				"bzz-raw://c8dc53d76461f0394cd2b0fa0a43e4b31a9c013e5d707df5b84eab4962fc728a",
+				"dweb:/ipfs/Qmc1baid2KNN2ySDMwvc9AJCDMcwKJjeeP8Y89EMj1LMNR"
 			]
 		},
-		"Qilin/libraries/Safemath.sol": {
+		"Test/libraries/Safemath.sol": {
 			"keccak256": "0xe92f3aa56d7863251bb6106fff4008c0ff5ad7a9f34e1c143d48f9f1be06f94c",
 			"urls": [
 				"bzz-raw://ee22aea0f6fae65466bc63a495dd4e515360492d09d770541019bfe0a4571817",

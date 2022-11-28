@@ -1,0 +1,776 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "B",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "D",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "D0",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "_addr",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "_virtualLiquidityUpdate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "_D",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newMargin",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "tokenID",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "userID",
+						"type": "address"
+					}
+				],
+				"name": "addMargin",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "baserate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "const18",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "coordX",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "coordY",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"name": "debtIndex",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "user_ID",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "token_ID",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "debttokenAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "positionAmount",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "factory",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getpX",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getpY",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "lastFunding",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "lastFundingTime",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "lastPayingSide",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "leverageMax",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "userID",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					}
+				],
+				"name": "liquidate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "liquidationBonus",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "liquidationRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "marginIndex",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "marginLeverage",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "marginReserve",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "peqX",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "peqY",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "deltaX",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deltaY",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "userID",
+						"type": "address"
+					}
+				],
+				"name": "perpClose",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "perpFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "deltaX",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deltaY",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "XtoY",
+						"type": "bool"
+					},
+					{
+						"internalType": "address",
+						"name": "userID",
+						"type": "address"
+					}
+				],
+				"name": "perpOpen",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "priceLocal",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "swapFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tickrange",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tokenX",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tokenY",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalDebtX",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalDebtY",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalDebttokenX",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalDebttokenY",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalLiquidity",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "trueLiquidX",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "trueLiquidX0",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "trueLiquidY",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "trueLiquidY0",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "twoWhite",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "upperFunding8H",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Test/Qilin_Pool_Logic.sol": "PoolLogic"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Test/QilinERC20.sol": {
+			"keccak256": "0xcf03a2fa2893a9c52dd8cd59a2752e47a5da36187a4f1ef874a6454f44748d07",
+			"urls": [
+				"bzz-raw://f37000e7d69ff56771224dd0df2dcee6ec17e1cb930d839ba27764e93f42ca08",
+				"dweb:/ipfs/QmYB3i1sTFNzbf245RV51iqrLPrDpKkqHuQqGjaWwe7LaD"
+			]
+		},
+		"Test/Qilin_Pool.sol": {
+			"keccak256": "0x994f920957608381f9d9321cf2caaf6a90691dbb308ab7acc1500c053aac881b",
+			"urls": [
+				"bzz-raw://38174a6c7b0b060b25cce782b74fc272d0251436a765e0d77250c2645ae7117e",
+				"dweb:/ipfs/QmSMLi835g7YEA8SzNy7MxMDy43Y1b68FnTZpWB384kmEw"
+			]
+		},
+		"Test/Qilin_Pool_Logic.sol": {
+			"keccak256": "0xcbb772880b3fae3197c00b1190942241a7efd201133256d23104160ad46af2c4",
+			"urls": [
+				"bzz-raw://277feb413bcf51e3a658d1be2382c7d6681697353339e158037180a2bd2f45af",
+				"dweb:/ipfs/Qmf3P8QCYTLatLUrymXEqi9C4TXbQ8V285AGbooVpMKJhU"
+			]
+		},
+		"Test/interface/IERC20.sol": {
+			"keccak256": "0x41d78140d76d3f4b6527cbb8657b4fcac125c5dbe4cc5228ad78369e7630e310",
+			"urls": [
+				"bzz-raw://a4970e871a091f06cce6b62d527b10d262f05d6e45161f5c59abfaad16691875",
+				"dweb:/ipfs/QmZ3YFz8WtfLJfQCswbfoQwHRNieo9fgSSzJkdq2XrtdSm"
+			]
+		},
+		"Test/interface/IQilinERC20.sol": {
+			"keccak256": "0x7be71c5b3f764f71319092ca8d8b416d9b977943369b3727b0659109e5e0e3a6",
+			"urls": [
+				"bzz-raw://6316ef912010835844a51977850dd6efbd142ef66273caf8abd70b197900959f",
+				"dweb:/ipfs/QmdgQbwyf9KARi7pXr6yxu5YRdDcvvSevqZrqFPjZrXjSd"
+			]
+		},
+		"Test/interface/IQilin_Callee.sol": {
+			"keccak256": "0xb465ade55da0ed667c49e78bc701c2f0b8e46da31a32b691b807865bfeef1212",
+			"urls": [
+				"bzz-raw://1cbc66ca5fb737544436bbab8f4781022401fb6b99e4c008862f9de3df0eb3bc",
+				"dweb:/ipfs/QmekPSoyYhsJaLbsNiYjZE92npVQBPN3zDmGc8FYAjvmws"
+			]
+		},
+		"Test/interface/IQilin_Factory.sol": {
+			"keccak256": "0x4739c99a16a779bb6ca42432fdd9e67c99fe38ba81935649e9109ca27fcb090f",
+			"urls": [
+				"bzz-raw://1017371a421e5617d1e895514d288bb5f999ee41dc32b55d8663c04626034267",
+				"dweb:/ipfs/QmTxDh1em4Z1c6aGBBPo4LDT6CtADR6QsfEU8dUodKBnbL"
+			]
+		},
+		"Test/interface/IQilin_Pool.sol": {
+			"keccak256": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+			"urls": [
+				"bzz-raw://0000000000000000000000000000000000000000000000000000000000000000",
+				"dweb:/ipfs/QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH"
+			]
+		},
+		"Test/libraries/Math.sol": {
+			"keccak256": "0xd753f25df3382a98b64e9df24ed1259ad2f59e9d737390b16f49889876a98120",
+			"urls": [
+				"bzz-raw://c8dc53d76461f0394cd2b0fa0a43e4b31a9c013e5d707df5b84eab4962fc728a",
+				"dweb:/ipfs/Qmc1baid2KNN2ySDMwvc9AJCDMcwKJjeeP8Y89EMj1LMNR"
+			]
+		},
+		"Test/libraries/Safemath.sol": {
+			"keccak256": "0xe92f3aa56d7863251bb6106fff4008c0ff5ad7a9f34e1c143d48f9f1be06f94c",
+			"urls": [
+				"bzz-raw://ee22aea0f6fae65466bc63a495dd4e515360492d09d770541019bfe0a4571817",
+				"dweb:/ipfs/QmTqp2bWB4b5tQGD9bLZhgsYbXyx7xZCn3Vh7Vutiz34dg"
+			]
+		}
+	},
+	"version": 1
+}

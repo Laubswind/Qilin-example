@@ -1,95 +1,93 @@
 pragma solidity ^0.8.4;
 contract global{
 
-    uint256 public Liquidation_bonus;
-    uint256 public Tick_range;
-    uint256 public Base_rate;
-    uint256 public swap_fee;
-    uint256 public perp_fee;
+    uint256 public liquidationBonus;
+    uint256 public tickrange;
+    uint256 public baserate;
+    uint256 public swapFee;
+    uint256 public perpFee;
     address public factory;
-    bool public Two_white;
+    bool public twoWhite;
     
-    
-    
-    constructor() public {
-        factory = msg.sender;
-    }
+    //constructor() public {
+    //    factory = ???;
+    //}
 
 
 
     //留端口设置 清算罚金
-    function Set_Liquidation_bonus(uint rate) external{
+    function setLiquidationBonus(uint _rate) external{
         require(msg.sender == factory, 'Qilin: FORBIDDEN');
-        Liquidation_bonus = rate;
+        liquidationBonus = _rate;
     }
 
     //留端口设置tick 大小
-    function Set_tickrange(uint tickrange) external {
+    function setTickrange(uint _tickrange) external {
         require(msg.sender == factory, 'Qilin: FORBIDDEN');
-        Tick_range = tickrange;
+        tickrange = _tickrange;
     }
 
     //更改保证金种类
-    function update_margintypes(bool two_white) external {
+    function updateMargintypes(bool _twoWhite) external {
         require(msg.sender == factory, 'Qilin: FORBIDDEN');
-        Two_white = two_white;
+        twoWhite = _twoWhite;
     }
 
     //留端口设置base rate
-    function Set_baserate(uint baserate) external {
+    function setBaserate(uint _baserate) external {
         require(msg.sender == factory, 'Qilin: FORBIDDEN');
-        Base_rate = baserate;
+        baserate = _baserate;
     }
 
     //留端口设置swap fee
-    function Set_swapfee(uint swapfee) external {
+    function setSwapFee(uint _swapFee) external {
         require(msg.sender == factory, 'Qilin: FORBIDDEN');
-        swap_fee = swapfee;
+        swapFee = _swapFee;
     }
 
     //留端口设置perp fee
-    function Set_perpfee(uint perpfee) external {
+    function setPerpFee(uint _perpFee) external {
         require(msg.sender == factory, 'Qilin: FORBIDDEN');
-        perp_fee = perpfee;
+        perpFee = _perpFee;
     }
 
 
 
 
     //留端口查询 清算罚金
-    function Get_Liquidation_bonus() external view returns (uint rate){
+    function getLiquidationBonus() external view returns (uint256){
 
-        rate = Liquidation_bonus;
+        return liquidationBonus;
     }
 
     //留端口查询tick 大小
-    function Get_tickrange() external view returns (uint tickrange){
+    function getTickrange() external view returns (uint256){
 
-        tickrange = Tick_range;
+        return tickrange;
     }
 
     //查询保证金种类
-    function Get_margintypes() external view returns (bool two_white){
+    function getMargintypes() external view returns (bool){
 
-        two_white = Two_white;
+        return twoWhite;
     }
 
     //留端口查询base rate
-    function Get_baserate() external view returns (uint baserate){
+    function getBaserate() external view returns (uint256){
 
-        baserate = Base_rate;
+        return baserate;
     }
 
     //留端口查询swap fee
-    function Get_swapfee() external view returns (uint swapfee){
+    function getSwapFee() external view returns (uint256){
 
-        swapfee = swap_fee;
+        return swapFee;
     }
 
     //留端口查询perp fee
-    function Get_perpfee() external view returns (uint perpfee){
+    function getPerpFee() external view returns (uint256){
 
-        perpfee = perp_fee;
+        return perpFee;
     }
 
 
