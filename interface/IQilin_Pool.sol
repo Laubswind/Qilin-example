@@ -16,6 +16,7 @@ interface IQilinPool {
     function burnLiquidity(uint liquidity , address to) external returns(uint burnX , uint burnY);
     function swap(address to, uint256 Xout, uint256 Yout) external;
     function delegatePerpOpen( uint deltaX, uint deltaY, bool XtoY, address userID) external;
+    function delegatePerpBiopen(uint deltaX, uint deltaY, address userID) external;
     function delegatePerpClose(uint deltaX, uint deltaY, address userID) external;
     function delegateLiquidate(address userID, address _to) external;
     function delegateAddMargin(address tokenID, address userID) external;
@@ -30,5 +31,6 @@ interface IQilinPool {
     function setBaserate(uint _baserate) external;
     function setSwapFee(uint _swapFee) external;
     function setPerpFee(uint _perpFee) external;
+    function setLIimitation(uint _limitation) external;
     function skim(address to) external;
 }

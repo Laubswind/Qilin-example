@@ -52,6 +52,7 @@ contract Pool is QilinERC20{
     bool public twoWhite;
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
     uint private unlocked = 1;
+    uint8 limitation = 0;                          // 0 , 1 , 2 三个档位
 
     struct debtbook{
         address user_ID;
@@ -220,16 +221,11 @@ contract Pool is QilinERC20{
     }
 
     //一键 多空双开
-    //function Perp_biopen(uint deltaX, uint deltaY, address userID) external lock{
-    //    require(deltaX * deltaY == 0 && deltaX + deltaY > 0);
-    //    if(deltaX > 0){
-    //        Perp_open(deltaX , 0 , true , userID);
-    //        Perp_open(deltaX , 0 , false, userID);
-    //    }else{
-    //        Perp_open(0 , deltaY , true , userID);
-    //        Perp_open(0 , deltaY , false, userID);
-    //    }
-    //}
+    function delegatePerpBiopen(uint deltaX, uint deltaY, address userID) external lock{
+        (bool success, bytes memory data) = _addr.delegatecall(
+            abi.encodeWithSignature("perpBipen(uint , uint , address)", deltaX , deltaY ,  userID)
+        );
+    }
     
 
     //平仓 
@@ -249,11 +245,17 @@ contract Pool is QilinERC20{
     
     //加保证金
     function delegateAddMargin(address tokenID, address userID) external {
-        uint new_margin;
-        new_margin = IERC20(tokenID).balanceOf(address(this));
-        (bool success, bytes memory data) = _addr.delegatecall(
-            abi.encodeWithSignature("addMargin(uint , uint ,  address)", new_margin , userID , userID)
-        );
+        uint newMargin;
+        newMargin = IERC20(tokenID).balanceOf(address(this));
+        if(tokenID == tokenY && twoWhite == true){
+            newMargin = newMargin - trueLiquidY - marginReserve[1];
+            marginIndex[userID][1] += newMargin;
+            marginReserve[1] += newMargin;
+        }else{
+            newMargin = newMargin - trueLiquidX - marginReserve[0];
+            marginIndex[userID][0] += newMargin;
+            marginReserve[0] += newMargin;
+        }
     }//
 
     //提取保证金
@@ -323,6 +325,13 @@ contract Pool is QilinERC20{
         
         perpFee = _perpFee;
     }
+
+    function setLIimitation(uint8 _limitation) external onlyFactoryCall{
+        
+        limitation = _limitation;
+    }
+
+
 
 
     //使真实资产存量等于记录值，可被外部套利者调用

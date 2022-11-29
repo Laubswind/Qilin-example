@@ -1,0 +1,44 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Qilin/interface/IQilin_Pool_Logic.sol": "IQilinPoolLogic"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Qilin/interface/IQilin_Pool_Logic.sol": {
+			"keccak256": "0x3cef1f87ca2ad2e4ee28a5d397863be098eacb93d638a7a7cab1ae4dbd10a674",
+			"urls": [
+				"bzz-raw://7273fd57a99a4294c695ae4a879267429930db094247da7eaa8f0065b99bbe02",
+				"dweb:/ipfs/QmSvAsgUfi1yjpyZAZo1SxE44Xk51BFZ2x62yhGbheeiMf"
+			]
+		}
+	},
+	"version": 1
+}

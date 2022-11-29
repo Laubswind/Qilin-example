@@ -520,6 +520,29 @@
 						"type": "address"
 					}
 				],
+				"name": "delegatePerpBiopen",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "deltaX",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deltaY",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "userID",
+						"type": "address"
+					}
+				],
 				"name": "delegatePerpClose",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -936,6 +959,19 @@
 					}
 				],
 				"name": "setFundingrateUpper",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_limitation",
+						"type": "uint8"
+					}
+				],
+				"name": "setLIimitation",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1390,10 +1426,10 @@
 			]
 		},
 		"Qilin/Qilin_Pool.sol": {
-			"keccak256": "0x4e5d69eceb5b5c22325efe2102b87fb4e00ecc1445284ee9a539b091f5c88828",
+			"keccak256": "0x0f0622642a309b568d8afcd25274cd753da98bde5dedeead828f3416d95072e4",
 			"urls": [
-				"bzz-raw://8cfa4a3ff9bd792e9ec52c46cb617f2fcb922355b63fddc6e0babec33b5d275d",
-				"dweb:/ipfs/QmehpCexeWksT6BSdnYPsGTc9xUXSrW634vB8jbVkqajcj"
+				"bzz-raw://4e985f9644d29da604c22c1c5c6895bbc15da7ef48281a069f5abc4e52a2f28b",
+				"dweb:/ipfs/QmdHYNy1J7KEqHhrdw89TfFJ95PKJd9NbDfoeRSiQ4zpsR"
 			]
 		},
 		"Qilin/interface/IERC20.sol": {
@@ -1425,10 +1461,10 @@
 			]
 		},
 		"Qilin/interface/IQilin_Pool.sol": {
-			"keccak256": "0xb34fe7f227ee26ce8176981c55e5500e7226877a8bc9e7fd84db805f3cfdf102",
+			"keccak256": "0x1b6d83f8d7986cffe75adca6a697b268d40b9b9c1c6104fd2ff7d844e18e6f76",
 			"urls": [
-				"bzz-raw://18b70845a294f3032db2afdea833a55c07caabb4dbbb6531b891eedfbd70b574",
-				"dweb:/ipfs/QmNYnHw4uqQEZ9RqW3gJ1tpJf7vg3q5XztvtHQtNHjVeLg"
+				"bzz-raw://02c0a81f70a38c8dc8e3ce1d72c6f0d3922f22853574179fc8312b0dde7c6309",
+				"dweb:/ipfs/QmT7cGB9eM6nvN13mCk3PumHr5HVEoG7DGu4dSHYy6a6tr"
 			]
 		},
 		"Qilin/libraries/Math.sol": {

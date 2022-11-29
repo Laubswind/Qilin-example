@@ -50,6 +50,7 @@ contract PoolLogic{
     bool public twoWhite;
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
     uint private unlocked = 1;
+    uint8 limitation = 0;                          // 0 , 1 , 2 三个档位
     
     struct debtbook{
         address user_ID;
@@ -248,6 +249,7 @@ contract PoolLogic{
         uint256 Out;
         uint256 In;
         if(XtoY == true){
+            require(limitation > 0);
             if(deltaX > 0){
                 Out = _tradeXToY(deltaX , true , 0);
                 In = deltaX;
@@ -271,6 +273,7 @@ contract PoolLogic{
                 trueLiquidY += _gap;
             }
         }else{
+            require(limitation > 1);
             if(deltaX > 0){
                 Out = deltaX;
                 In = _tradeYToX( deltaX * Math.calTimes(priceLocal , peqY , peqX) / const18 , true , deltaX );//
@@ -297,16 +300,16 @@ contract PoolLogic{
     }
 
     //一键 多空双开
-    //function Perp_biopen(uint deltaX, uint deltaY, address userID) external lock{
-    //    require(deltaX * deltaY == 0 && deltaX + deltaY > 0);
-    //    if(deltaX > 0){
-    //        Perp_open(deltaX , 0 , true , userID);
-    //        Perp_open(deltaX , 0 , false, userID);
-    //    }else{
-    //        Perp_open(0 , deltaY , true , userID);
-    //        Perp_open(0 , deltaY , false, userID);
-    //    }
-    //}
+    function perpBiopen(uint deltaX, uint deltaY, address userID) external lock{
+        require(deltaX * deltaY == 0 && deltaX + deltaY > 0);
+        if(deltaX > 0){
+            perpOpen(deltaX , 0 , true , userID);
+            perpOpen(deltaX , 0 , false, userID);
+        }else{
+            perpOpen(0 , deltaY , true , userID);
+            perpOpen(0 , deltaY , false, userID);
+        }
+    }
     
 
     //平仓 
@@ -362,17 +365,17 @@ contract PoolLogic{
     }/////
 
     //加保证金
-    function addMargin(uint newMargin , address tokenID , address userID) external lock {
-        if(tokenID == tokenY && twoWhite == true){
-            newMargin = newMargin - trueLiquidY - marginReserve[1];
-            marginIndex[userID][1] += newMargin;
-            marginReserve[1] += newMargin;
-        }else{
-            newMargin = newMargin - trueLiquidX - marginReserve[0];
-            marginIndex[userID][0] += newMargin;
-            marginReserve[0] += newMargin;
-        }
-    }//
+    //function addMargin(uint newMargin , address tokenID , address userID) external lock {
+    //    if(tokenID == tokenY && twoWhite == true){
+    //        newMargin = newMargin - trueLiquidY - marginReserve[1];
+    //        marginIndex[userID][1] += newMargin;
+    //        marginReserve[1] += newMargin;
+    //    }else{
+    //        newMargin = newMargin - trueLiquidX - marginReserve[0];
+    //        marginIndex[userID][0] += newMargin;
+    //        marginReserve[0] += newMargin;
+    //    }
+    //}//
 
     //提取保证金
     function withdrawMargin (address userID , address tokenID, address to, uint amount) external lock {
