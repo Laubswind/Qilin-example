@@ -724,17 +724,17 @@
 			]
 		},
 		"Qilin/Qilin_Pool.sol": {
-			"keccak256": "0x8b5fc4ffc0770476311917c7befc289669778f2c1b59605f668d15cba155e6a6",
+			"keccak256": "0x0f0622642a309b568d8afcd25274cd753da98bde5dedeead828f3416d95072e4",
 			"urls": [
-				"bzz-raw://30fa5bc1f4f79e2324b75a6a47e1ebe17a96b4f553f72cf076ad7fc769eec478",
-				"dweb:/ipfs/QmSTny2cYBLwkexf4sFp4Lg5i863mjqK3ALEfn98Q8Bneq"
+				"bzz-raw://4e985f9644d29da604c22c1c5c6895bbc15da7ef48281a069f5abc4e52a2f28b",
+				"dweb:/ipfs/QmdHYNy1J7KEqHhrdw89TfFJ95PKJd9NbDfoeRSiQ4zpsR"
 			]
 		},
 		"Qilin/Qilin_Pool_Logic.sol": {
-			"keccak256": "0x69deba438a9e924b25126e682d3a90d2956299c60f761b1ad2128f71b91f481e",
+			"keccak256": "0x8061135a4a24c39d560108a50ce9671c5873f0a166e41a32d310e4e3a95bda55",
 			"urls": [
-				"bzz-raw://38aa1b230c4e21523dca39a192df361cb8f1eb989a8120d12314478661218972",
-				"dweb:/ipfs/QmUQcrV9fdUZuxAyyTJ5zrvqH7LDonQ8Gcx5XjTDmKPt9F"
+				"bzz-raw://a27a9655c1f038cfb35aacb63253c122a84d338661e8e57bd597e48682893d32",
+				"dweb:/ipfs/QmXTQxLtZfUNTaxLv2gv7Va1iRQP4tt5q3DAUVoAzbT2Vb"
 			]
 		},
 		"Qilin/interface/IERC20.sol": {

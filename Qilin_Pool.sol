@@ -13,9 +13,9 @@ import './QilinERC20.sol';
 contract Pool is QilinERC20{
 
     /* ========== STATE VARIABLES ========== */
-    uint256 public B;
-    uint256 public D;
-    uint256 public D0;
+    uint256 public B;                             // equation variable B
+    uint256 public D;                             // equation variable D
+    uint256 public D0;                            // 
     uint256 public coordX; 
     uint256 public coordY;
     uint256 public peqX;
@@ -107,21 +107,20 @@ contract Pool is QilinERC20{
 
     /* ========== MUTATIVE FUNCTIONS ========== */
 
-    function initialize(address _tokenX, address _tokenY, uint addX , uint addY , address to) external onlyFactoryCall {
-        require(addX * addY > 0);
+    function initialize(address _tokenX, address _tokenY) external onlyFactoryCall {
         tokenX = _tokenX;
         tokenY = _tokenY;
         B = const18;
         D = const18;
         D0 = D;
-        totalLiquidity = const18;
-        coordX = const18;
-        coordY = const18;
-        trueLiquidX = addX;
-        trueLiquidY = addY;
-        peqX = const18**2 / addX;
-        peqY = const18**2 / addY;
-        QilinERC20._mint(to, const18);
+        // totalLiquidity = const18;
+        // coordX = const18;
+        // coordY = const18;
+        // trueLiquidX = addX;
+        // trueLiquidY = addY;
+        // peqX = const18**2 / addX;
+        // peqY = const18**2 / addY;
+        // QilinERC20._mint(to, const18);
     }
 
     function _safeTransfer(address token, address to, uint value) private {

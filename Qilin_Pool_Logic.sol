@@ -359,9 +359,12 @@ contract PoolLogic{
         _safeTransfer(tokenX, _to ,  marginIndex[userID][0] * liquidationBonus);
         _safeTransfer(tokenY, _to ,  marginIndex[userID][1] * liquidationBonus);
         delete marginIndex[userID]; //
+
+        perpClose(debtIndex[userID][false].positionAmount, debtIndex[userID][true].positionAmount, userID);
+        //根据position close所得 和 debt 来确认亏损额，使保险基金打入池子对应的资金
+        
         debtIndex[userID][false].debttokenAmount = 0;
         debtIndex[userID][true].debttokenAmount = 0;
-        perpClose(debtIndex[userID][false].positionAmount, debtIndex[userID][true].positionAmount, userID);
     }/////
 
     //加保证金
