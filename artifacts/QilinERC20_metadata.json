@@ -334,7 +334,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"copy 1110/QilinERC20.sol": "QilinERC20"
+			"Qilin/QilinERC20.sol": "QilinERC20"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -348,21 +348,21 @@
 		"remappings": []
 	},
 	"sources": {
-		"copy 1110/QilinERC20.sol": {
-			"keccak256": "0xcf03a2fa2893a9c52dd8cd59a2752e47a5da36187a4f1ef874a6454f44748d07",
+		"Qilin/QilinERC20.sol": {
+			"keccak256": "0xd18443657427793e19f30d0e2b0c773b7d180ad94a07d9b5dd0d34ef551ae130",
 			"urls": [
-				"bzz-raw://f37000e7d69ff56771224dd0df2dcee6ec17e1cb930d839ba27764e93f42ca08",
-				"dweb:/ipfs/QmYB3i1sTFNzbf245RV51iqrLPrDpKkqHuQqGjaWwe7LaD"
+				"bzz-raw://cb62b87ba5b90ee7642a156a505124b30a8bc858885fd9e4884f2888a24a7795",
+				"dweb:/ipfs/QmVXXaF9jpbbnZvRjV4dHMF4YLDCkqnq3moWrauH2szWQp"
 			]
 		},
-		"copy 1110/interface/IQilinERC20.sol": {
+		"Qilin/interface/IQilinERC20.sol": {
 			"keccak256": "0x7be71c5b3f764f71319092ca8d8b416d9b977943369b3727b0659109e5e0e3a6",
 			"urls": [
 				"bzz-raw://6316ef912010835844a51977850dd6efbd142ef66273caf8abd70b197900959f",
 				"dweb:/ipfs/QmdgQbwyf9KARi7pXr6yxu5YRdDcvvSevqZrqFPjZrXjSd"
 			]
 		},
-		"copy 1110/libraries/Safemath.sol": {
+		"Qilin/libraries/Safemath.sol": {
 			"keccak256": "0xe92f3aa56d7863251bb6106fff4008c0ff5ad7a9f34e1c143d48f9f1be06f94c",
 			"urls": [
 				"bzz-raw://ee22aea0f6fae65466bc63a495dd4e515360492d09d770541019bfe0a4571817",

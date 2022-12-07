@@ -2,13 +2,14 @@ pragma solidity ^0.8.4;
 
 import './interface/IQilinERC20.sol';
 import './libraries/Safemath.sol';
-//待修改//
+
+//copied from Uni-V2, to be modified
 
 contract QilinERC20 is IQilinERC20 {
     using Safemath for uint;
 
-    string public constant override name = 'Uniswap V2';
-    string public constant override symbol = 'UNI-V2';
+    string public constant override name = 'Qilin';
+    string public constant override symbol = 'QiL';
     uint8 public constant override decimals = 18;
     uint  public override totalSupply;
     mapping(address => uint) public override balanceOf;
