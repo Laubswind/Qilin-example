@@ -11,7 +11,7 @@ interface IQilinPool {
         uint amountYOut,
         address indexed to
     );
-    function initialize(address _tokenX, address _tokenY, uint addX , uint addY , address to) external;
+    function initialize(address _tokenX, address _tokenY) external;
     function addLiquidity(uint addX , uint addY , address to) external returns(uint liquidity);
     function burnLiquidity(uint liquidity , address to) external returns(uint burnX , uint burnY);
     function swap(address to, uint256 Xout, uint256 Yout) external;

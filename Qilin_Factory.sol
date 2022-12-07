@@ -10,8 +10,6 @@ contract QilinFactory is IQilin_Factory {
     mapping(address => mapping(address => address)) public override getPair;
     address[] public override allPairs;
 
-    event  PairCreated(address indexed token0, address indexed token1, address pair, uint);
-
     constructor(address _feeToSetter) public {
         feeToSetter = _feeToSetter;
     }

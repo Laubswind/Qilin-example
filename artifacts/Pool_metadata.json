@@ -240,16 +240,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "addX",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "addY",
-						"type": "uint256"
-					},
-					{
 						"internalType": "address",
 						"name": "to",
 						"type": "address"
@@ -429,16 +419,6 @@
 				],
 				"name": "debtIndex",
 				"outputs": [
-					{
-						"internalType": "address",
-						"name": "user_ID",
-						"type": "address"
-					},
-					{
-						"internalType": "bool",
-						"name": "token_ID",
-						"type": "bool"
-					},
 					{
 						"internalType": "uint256",
 						"name": "debttokenAmount",
@@ -654,21 +634,6 @@
 						"internalType": "address",
 						"name": "_tokenY",
 						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "addX",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "addY",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
 					}
 				],
 				"name": "initialize",
@@ -710,19 +675,6 @@
 						"internalType": "bool",
 						"name": "",
 						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "leverageMax",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -1426,10 +1378,10 @@
 			]
 		},
 		"Qilin/Qilin_Pool.sol": {
-			"keccak256": "0x0f0622642a309b568d8afcd25274cd753da98bde5dedeead828f3416d95072e4",
+			"keccak256": "0x36a898f249fb10f0d623af110f6c84c59b47d2d07a8b73d2cfbc5debe4a78c7d",
 			"urls": [
-				"bzz-raw://4e985f9644d29da604c22c1c5c6895bbc15da7ef48281a069f5abc4e52a2f28b",
-				"dweb:/ipfs/QmdHYNy1J7KEqHhrdw89TfFJ95PKJd9NbDfoeRSiQ4zpsR"
+				"bzz-raw://b9b233a8856266785085cbebccf6b51dbd3e8aa153cd8a5ae0aa3c33a726362b",
+				"dweb:/ipfs/QmWvqtebCTboNw4iKpav3t6j2broeXg1LcWVN1PKU66dC6"
 			]
 		},
 		"Qilin/interface/IERC20.sol": {
@@ -1446,13 +1398,6 @@
 				"dweb:/ipfs/QmdgQbwyf9KARi7pXr6yxu5YRdDcvvSevqZrqFPjZrXjSd"
 			]
 		},
-		"Qilin/interface/IQilin_Callee.sol": {
-			"keccak256": "0xb465ade55da0ed667c49e78bc701c2f0b8e46da31a32b691b807865bfeef1212",
-			"urls": [
-				"bzz-raw://1cbc66ca5fb737544436bbab8f4781022401fb6b99e4c008862f9de3df0eb3bc",
-				"dweb:/ipfs/QmekPSoyYhsJaLbsNiYjZE92npVQBPN3zDmGc8FYAjvmws"
-			]
-		},
 		"Qilin/interface/IQilin_Factory.sol": {
 			"keccak256": "0x4739c99a16a779bb6ca42432fdd9e67c99fe38ba81935649e9109ca27fcb090f",
 			"urls": [
@@ -1461,17 +1406,17 @@
 			]
 		},
 		"Qilin/interface/IQilin_Pool.sol": {
-			"keccak256": "0x1b6d83f8d7986cffe75adca6a697b268d40b9b9c1c6104fd2ff7d844e18e6f76",
+			"keccak256": "0xee111c30e88324c8fbf475b239cfecb01c25b40a249f33fbcbe9c670035cb5d9",
 			"urls": [
-				"bzz-raw://02c0a81f70a38c8dc8e3ce1d72c6f0d3922f22853574179fc8312b0dde7c6309",
-				"dweb:/ipfs/QmT7cGB9eM6nvN13mCk3PumHr5HVEoG7DGu4dSHYy6a6tr"
+				"bzz-raw://8b056f233362db5251061c633d2cd725ed53a7eaadc605d5a6d1f9297ea64a41",
+				"dweb:/ipfs/QmQqZBvJ3qdxZgSfcWDi3L6Me3BH1mC4gRRuZ3gohrTpLF"
 			]
 		},
 		"Qilin/libraries/Math.sol": {
-			"keccak256": "0xd753f25df3382a98b64e9df24ed1259ad2f59e9d737390b16f49889876a98120",
+			"keccak256": "0x8babdd296dbb529d0c3c2f3d6eab8690fb92ec6da685d4038c37d6676740ec98",
 			"urls": [
-				"bzz-raw://c8dc53d76461f0394cd2b0fa0a43e4b31a9c013e5d707df5b84eab4962fc728a",
-				"dweb:/ipfs/Qmc1baid2KNN2ySDMwvc9AJCDMcwKJjeeP8Y89EMj1LMNR"
+				"bzz-raw://77a10a4796168c6e7a39d8f44b7ed07d807c60365b23b47fe6a401fbdee91625",
+				"dweb:/ipfs/QmQfDsNKzu6HUg59FpAt8L1jG9aBh4mMHLcffojkbXVUMt"
 			]
 		},
 		"Qilin/libraries/Safemath.sol": {

@@ -11,57 +11,54 @@ import './QilinERC20.sol';
 contract PoolLogic{
 
     /* ========== STATE VARIABLES ========== */
-    uint256 public B;
-    uint256 public D;
-    uint256 public D0;
-    uint256 public coordX; 
-    uint256 public coordY;
-    uint256 public peqX;
-    uint256 public peqY;
-    uint256 public getpX;
-    uint256 public getpY;
-    uint256 public trueLiquidX0;
-    uint256 public trueLiquidY0;
-    uint256 public trueLiquidX;
-    uint256 public trueLiquidY;
-    uint256 public priceLocal;
-    uint256 public totalDebtX;
-    uint256 public totalDebtY;
-    uint256 public totalDebttokenX;
-    uint256 public totalDebttokenY;
-    uint256 public leverageMax;                    //固定值，留接口修改
-    uint256 public lastFunding;                    //系统内记录上一次funding值
-    uint256 public lastFundingTime;                //系统内记录上一次funding时间
-    bool public lastPayingSide;                    //系统内记录上一次funding方向
-    uint256 public upperFunding8H;                 //= 5000000000固定值，留接口修改
-    address public factory;
-    address public tokenX;
-    address public tokenY;
-    uint256 public marginLeverage;                 //开仓杠杆 18位
-    uint256 public totalLiquidity;                 //LPtoken总值
-    uint256 public liquidationRate;                //维持保证金率
+    uint256 public B;                             // equation variable B
+    uint256 public D;                             // equation variable D
+    uint256 public D0;                            // initial D value
+    uint256 public coordX;                        // coordinate of X on curve
+    uint256 public coordY;                        // coordinate of Y on curve
+    uint256 public peqX;                          // the increase  of X coordinate when 1 unit of X liquidity increases
+    uint256 public peqY;                          // the increase  of Y coordinate when 1 unit of X liquidity increases
+    uint256 public getpX;                         // sum of positions recorded in X
+    uint256 public getpY;                         // sum of positions recorded in Y
+    uint256 public trueLiquidX0;                  // initial X true liquidity
+    uint256 public trueLiquidY0;                  // initial Y true liquidity
+    uint256 public trueLiquidX;                   // X true liquidity
+    uint256 public trueLiquidY;                   // Y true liquidity
+    uint256 public priceLocal;                    // negative reciprocal of the derivative of the curve
+    uint256 public totalDebtX;                    // the total debt in X that traders own the pool
+    uint256 public totalDebtY;                    // the total debt in Y that traders own the pool
+    uint256 public totalDebttokenX;               // the total debt token that represents total debt in X
+    uint256 public totalDebttokenY;               // the total debt token that represents total debt in Y
+    uint256 public lastFunding;                   // the funding that was recorded last time
+    uint256 public lastFundingTime;               // the time that the last funding was recorded
+    bool public lastPayingSide;                   // the paying side of last funding
+    uint256 public upperFunding8H;                // = 5000000000 , the max funding in 8H
+    address public factory;                       // the address of factory contract
+    address public tokenX;                        // the address of token X
+    address public tokenY;                        // the address of token Y
+    uint256 public marginLeverage;                // the max leverage that perpetual traders can use when opening position
+    uint256 public totalLiquidity;                // the sum of all LPs' liquidity
+    uint256 public liquidationRate;               // maintenance margin rate
     uint256 public const18 = 1e18;
-    address public _addr;                          //logic 合约地址 可变更
-    uint256 public liquidationBonus;
-    uint256 public tickrange;
-    uint256 public baserate;                       //= 156200，固定值，留接口修改
-    uint256 public swapFee;
-    uint256 public perpFee;
-    bool public twoWhite;
+    address public _addr;                         // the address of logic contract
+    uint256 public liquidationBonus;              // reward rate of liquidation
+    uint256 public tickrange;                     
+    uint256 public baserate;                      // = 156200
+    uint256 public swapFee;                       // swap trading fee rate
+    uint256 public perpFee;                       // perpetual trading fee rate
+    bool public twoWhite;                         // if the Y token is in the white list (X token must be in the white list)
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
     uint private unlocked = 1;
-    uint8 limitation = 0;                          // 0 , 1 , 2 三个档位
-    
+    uint8 limitation = 0;                         // 0: only swap trading allowed ;  1: swap trading +  X to Y perpetual trading allowed;  2: all trading allowed;
+
     struct debtbook{
-        address user_ID;
-        bool token_ID; 
         uint debttokenAmount;
         uint positionAmount;
     }
 
-    uint[2] public marginReserve;   //记录保证金的总存储量
-    mapping(address => mapping(bool => debtbook)) public debtIndex;  //将用户address + 债务token（左侧资产还是右侧资产）与存储其debt_token和仓位 对应
-    mapping(address => uint[2]) public marginIndex;  //将用户address与存储其保证金的数组对应
+    uint[2] public marginReserve;   // total reserve of margins of all users
+    mapping(address => mapping(bool => debtbook)) public debtIndex;  // userID + token(0:X;1:Y)  =>  debtbook
+    mapping(address => uint[2]) public marginIndex;  // userID => margin reserves of two tokens
 
 
     /* ========== MODIFIERS ========== */
@@ -76,24 +73,24 @@ contract PoolLogic{
 
     /* ========== VIEWS ========== */
 
-    // 虚拟流动性更新
+    // update liquidity
     function _virtualLiquidityUpdate() internal view returns (uint _D){
         uint N = Math.calN(trueLiquidX , B , peqX , trueLiquidY , 2 * 1e18 - B , peqY , trueLiquidX0 , trueLiquidY0); 
         _D = D0 * N / const18;
     }
 
-    //求保证金净值
+    // calculate the net value of [userID]'s margin
     function netMargin(address userID) internal view returns(uint net){
         net = marginIndex[userID][0] + Math.calTimes2(marginIndex[userID][1] ,  priceLocal , peqY , peqX , const18);
         
     }
 
-    //求仓位净值 注：36位
+    // calculate the net value of [userID]'s position
     function netPosition(address userID) internal view returns(uint net){
         net = debtIndex[userID][false].positionAmount + Math.calTimes2(debtIndex[userID][true].positionAmount , priceLocal , peqY , peqX , const18 );
     }
 
-    //求债务净值
+    // calculate the net value of [userID]'s debt
     function netDebt(address userID) internal view returns(uint net){
         net = Math.calTimes(debtIndex[userID][true].debttokenAmount ,  totalDebtY , totalDebttokenY) + Math.calTimes( Math.calTimes2(debtIndex[userID][false].debttokenAmount ,  totalDebtX , priceLocal , totalDebttokenX , const18) , peqY , peqX);
     }
@@ -108,46 +105,45 @@ contract PoolLogic{
     }
 
 
-    //现货/合约 交易，用X买Y input为 delta：用户支付的X值，perp：是否为合约交易，output为 Yget：用户支付的X值所能换出的Y值
+    // deltaX：amount of X trader paid; perp：perp trading (T) or swap trading (F); exactY : user want exact output (T) or not (F); output: amount of Y users get
     function _tradeXToY(uint deltaX, bool perp, uint exactY) internal lock returns(uint Yget) {
 
         uint Xin;
         while(deltaX - Xin > Math.calCross(Math.calTimes(D/2 , tickrange , const18), coordX, peqX)){
-            //计算此时曲线内触发跨tick的X值
+            //calculate the X value that triggers the cross-tick
             uint coordTestX = Math.calTimes(D/2 , tickrange , const18);
 
-            //计算对应的Y值
+            //calculate the corresponding Y coordinate
             uint coordTestY = Math.calY(B, Math.calC(B), D, coordTestX);
 
-
+            
             if( exactY > 0 && Yget + Math.calCross(coordY, coordTestY, peqY) > exactY) break;
 
+            //update Yget and Xin (cumulated)
             Yget += Math.calCross(coordY, coordTestY, peqY);
-
-            //deltaX减少跨tick所用的这部分X
             Xin += Math.calCross(coordTestX, coordX, peqX);
 
-            //如果是perp交易，则累加系统内总的Y Position
+            // if swap trading, cumulate true liquidity
             if(perp == false) {
                 trueLiquidX += Math.calCross(coordTestX, coordX, peqX);
                 trueLiquidY -= Math.calCross(coordY, coordTestY, peqY);
             }
 
-            // 按照跨tick后系统状态更新peqX peqY
+            // update peqX peqY
             peqY = Math.calTimes(peqY , D/2 , coordTestY);
             peqX = Math.calTimes(peqX , D/2 , coordTestX);
 
-            //计算跨tick后的曲线斜率所对应的priceLocal
+            //calculate priceLocal
             priceLocal = Math.calTimes2 (Math.calPrice(B, Math.calC(B), D, coordTestX, coordTestY) , coordTestY , D/2 , coordTestX , D/2 );
             
-            //更新 跨tick后X Y坐标
-            //计算此时对应的B C值
+            //calculate B (and C)
             B = Math.calB(D, priceLocal);
-            //C = 2 * const18 - B; 
+            
 
-            //根据新的各参数 更正流动性
+            // update D
             D = _virtualLiquidityUpdate();
-            //将更新流动性后的参数传入曲线
+
+            //update coordinates
             coordX = D/2;
             coordY = D/2;
 
@@ -174,7 +170,7 @@ contract PoolLogic{
         
     }
 
-    //现货/合约  交易，用Y买X input为Y
+    // deltaX：amount of Y trader paid; perp：perp trading (T) or swap trading (F); exactX : user want exact output (T) or not (F); output: amount of X users get
     function _tradeYToX(uint deltaY , bool perp , uint exactX) internal lock returns(uint Xget) {
 
         uint Yin;
@@ -223,7 +219,7 @@ contract PoolLogic{
         }    
     }
 
-    //更新debt总账
+    // update totaldebt by exercising the funding
     function _refreshTotalbook() internal {
         (uint PE , uint PS ) = Math.getPEPS(trueLiquidX , trueLiquidY ,  peqX , peqY , coordX , coordY , B , Math.calC(B) , D) ;
         (uint fundingX , bool payingSide) = Math.getFunding(PE, PS , getpX , getpY , baserate , upperFunding8H , trueLiquidX , trueLiquidY);
@@ -241,7 +237,7 @@ contract PoolLogic{
     }
 
 
-    //开仓 不允许多空同时开仓 开仓极限不能临近维持保证金线
+    // open position
     function perpOpen(uint deltaX, uint deltaY, bool XtoY, address userID) public lock{
         require(deltaX * deltaY == 0 && deltaX + deltaY > 0);
         _refreshTotalbook(); 
@@ -299,7 +295,7 @@ contract PoolLogic{
         }
     }
 
-    //一键 多空双开
+    // open two-way positions
     function perpBiopen(uint deltaX, uint deltaY, address userID) external lock{
         require(deltaX * deltaY == 0 && deltaX + deltaY > 0);
         if(deltaX > 0){
@@ -312,7 +308,7 @@ contract PoolLogic{
     }
     
 
-    //平仓 
+    // close position
     function perpClose(uint deltaX, uint deltaY, address userID) public lock {
         require(deltaX * deltaY == 0 && deltaX + deltaY > 0 && netMargin(userID) + netPosition(userID) > netDebt(userID) && deltaX <= debtIndex[userID][false].positionAmount && deltaY <= debtIndex[userID][true].positionAmount);
         _refreshTotalbook();
@@ -350,10 +346,7 @@ contract PoolLogic{
     }
 
 
-
-    
-
-    //清算 待修改
+    // liquidation
     function liquidate(address userID, address _to) external lock {
         require(netMargin(userID) + netPosition(userID) <= netDebt(userID) || netMargin(userID) + netPosition(userID) - netDebt(userID) <= netPosition(userID) * liquidationRate);
         _safeTransfer(tokenX, _to ,  marginIndex[userID][0] * liquidationBonus);
@@ -361,26 +354,14 @@ contract PoolLogic{
         delete marginIndex[userID]; //
 
         perpClose(debtIndex[userID][false].positionAmount, debtIndex[userID][true].positionAmount, userID);
-        //根据position close所得 和 debt 来确认亏损额，使保险基金打入池子对应的资金
-        
+        // let insurance fund transfer corresponding tokens to the pool, according to the
+        // UNFINISHED
         debtIndex[userID][false].debttokenAmount = 0;
         debtIndex[userID][true].debttokenAmount = 0;
-    }/////
+    }
 
-    //加保证金
-    //function addMargin(uint newMargin , address tokenID , address userID) external lock {
-    //    if(tokenID == tokenY && twoWhite == true){
-    //        newMargin = newMargin - trueLiquidY - marginReserve[1];
-    //        marginIndex[userID][1] += newMargin;
-    //        marginReserve[1] += newMargin;
-    //    }else{
-    //        newMargin = newMargin - trueLiquidX - marginReserve[0];
-    //        marginIndex[userID][0] += newMargin;
-    //        marginReserve[0] += newMargin;
-    //    }
-    //}//
 
-    //提取保证金
+    // withdraw margin
     function withdrawMargin (address userID , address tokenID, address to, uint amount) external lock {
         if(tokenID == tokenX){
             require(marginIndex[userID][0] > amount);

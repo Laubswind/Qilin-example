@@ -53,12 +53,14 @@
 			"burnLiquidity(uint256,address)": "7e401aca",
 			"delegateAddMargin(address,address)": "3fbb0e9b",
 			"delegateLiquidate(address,address)": "db35944f",
+			"delegatePerpBiopen(uint256,uint256,address)": "d6ce29ae",
 			"delegatePerpClose(uint256,uint256,address)": "eeea909f",
 			"delegatePerpOpen(uint256,uint256,bool,address)": "4bac6c47",
 			"delegateWithdrawMargin(address,address,address,uint256)": "e0ba7223",
-			"initialize(address,address,uint256,uint256,address)": "57fb25cc",
+			"initialize(address,address)": "485cc955",
 			"setBaserate(uint256)": "b66179de",
 			"setFundingrateUpper(uint256)": "ade446d2",
+			"setLIimitation(uint256)": "4452021e",
 			"setLeverageMargin(uint256)": "2f1d9842",
 			"setLiquidationBonus(uint256)": "28842d4f",
 			"setLiquidationRate(uint256)": "9cc8df77",
@@ -283,6 +285,29 @@
 					"type": "address"
 				}
 			],
+			"name": "delegatePerpBiopen",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "deltaX",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "deltaY",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "userID",
+					"type": "address"
+				}
+			],
 			"name": "delegatePerpClose",
 			"outputs": [],
 			"stateMutability": "nonpayable",
@@ -355,21 +380,6 @@
 					"internalType": "address",
 					"name": "_tokenY",
 					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "addX",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "addY",
-					"type": "uint256"
-				},
-				{
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
 				}
 			],
 			"name": "initialize",
@@ -399,6 +409,19 @@
 				}
 			],
 			"name": "setFundingrateUpper",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_limitation",
+					"type": "uint256"
+				}
+			],
+			"name": "setLIimitation",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"

@@ -216,6 +216,29 @@
 						"type": "address"
 					}
 				],
+				"name": "delegatePerpBiopen",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "deltaX",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deltaY",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "userID",
+						"type": "address"
+					}
+				],
 				"name": "delegatePerpClose",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -288,21 +311,6 @@
 						"internalType": "address",
 						"name": "_tokenY",
 						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "addX",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "addY",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
 					}
 				],
 				"name": "initialize",
@@ -332,6 +340,19 @@
 					}
 				],
 				"name": "setFundingrateUpper",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_limitation",
+						"type": "uint256"
+					}
+				],
+				"name": "setLIimitation",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -505,10 +526,10 @@
 	},
 	"sources": {
 		"Qilin/interface/IQilin_Pool.sol": {
-			"keccak256": "0xb34fe7f227ee26ce8176981c55e5500e7226877a8bc9e7fd84db805f3cfdf102",
+			"keccak256": "0xee111c30e88324c8fbf475b239cfecb01c25b40a249f33fbcbe9c670035cb5d9",
 			"urls": [
-				"bzz-raw://18b70845a294f3032db2afdea833a55c07caabb4dbbb6531b891eedfbd70b574",
-				"dweb:/ipfs/QmNYnHw4uqQEZ9RqW3gJ1tpJf7vg3q5XztvtHQtNHjVeLg"
+				"bzz-raw://8b056f233362db5251061c633d2cd725ed53a7eaadc605d5a6d1f9297ea64a41",
+				"dweb:/ipfs/QmQqZBvJ3qdxZgSfcWDi3L6Me3BH1mC4gRRuZ3gohrTpLF"
 			]
 		}
 	},

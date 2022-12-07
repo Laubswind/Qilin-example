@@ -125,16 +125,6 @@
 				"name": "debtIndex",
 				"outputs": [
 					{
-						"internalType": "address",
-						"name": "user_ID",
-						"type": "address"
-					},
-					{
-						"internalType": "bool",
-						"name": "token_ID",
-						"type": "bool"
-					},
-					{
 						"internalType": "uint256",
 						"name": "debttokenAmount",
 						"type": "uint256"
@@ -221,19 +211,6 @@
 						"internalType": "bool",
 						"name": "",
 						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "leverageMax",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -724,17 +701,17 @@
 			]
 		},
 		"Qilin/Qilin_Pool.sol": {
-			"keccak256": "0x0f0622642a309b568d8afcd25274cd753da98bde5dedeead828f3416d95072e4",
+			"keccak256": "0x25ee7f824f8964911c3ced9fb8dbee57ee299a6f257a39b3dedcb0236ee1f776",
 			"urls": [
-				"bzz-raw://4e985f9644d29da604c22c1c5c6895bbc15da7ef48281a069f5abc4e52a2f28b",
-				"dweb:/ipfs/QmdHYNy1J7KEqHhrdw89TfFJ95PKJd9NbDfoeRSiQ4zpsR"
+				"bzz-raw://14d40b660ae0eb3d3e6990913dfa449b8c8f6bdbb85728e5e47ac5bea8be2596",
+				"dweb:/ipfs/QmZVWLGRAxM8fab2TAu4Yp5UKx31rSv7R2CfTFnivKrr7J"
 			]
 		},
 		"Qilin/Qilin_Pool_Logic.sol": {
-			"keccak256": "0x8061135a4a24c39d560108a50ce9671c5873f0a166e41a32d310e4e3a95bda55",
+			"keccak256": "0x33624075f21227ebe544d70f8589dc9d063b3bd6106b360cdada7863320ec6f1",
 			"urls": [
-				"bzz-raw://a27a9655c1f038cfb35aacb63253c122a84d338661e8e57bd597e48682893d32",
-				"dweb:/ipfs/QmXTQxLtZfUNTaxLv2gv7Va1iRQP4tt5q3DAUVoAzbT2Vb"
+				"bzz-raw://85d0bfa5a1d934a1763908eb828a49f8d614478e799b7cbe37df19fe5656bf66",
+				"dweb:/ipfs/QmaW4piFdTrF8BLh6Jmdru4gSeqfL9xrHvJ9XX99gQ5UGY"
 			]
 		},
 		"Qilin/interface/IERC20.sol": {

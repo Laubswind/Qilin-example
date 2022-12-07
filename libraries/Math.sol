@@ -11,6 +11,11 @@ library Math {
         z = x > y ? x : y;
     }
 
+    // minimum of two
+    function min(uint x, uint y) internal pure returns (uint z) {
+        z = x > y ? y : x;
+    }
+
     // 求三者中最小值
     function min3(uint x, uint y,uint z) internal pure returns (uint u) {
         x = x < y ? x : y;

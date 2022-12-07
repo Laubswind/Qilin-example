@@ -1,0 +1,282 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_feeToSetter",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token0",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token1",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "pair",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "PairCreated",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "allPairs",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "allPairsLength",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "tokenA",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "tokenB",
+						"type": "address"
+					}
+				],
+				"name": "createPair",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "pair",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "feeTo",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "feeToSetter",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "getPair",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_feeTo",
+						"type": "address"
+					}
+				],
+				"name": "setFeeTo",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_feeToSetter",
+						"type": "address"
+					}
+				],
+				"name": "setFeeToSetter",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Qilin/Qilin_Factory.sol": "QilinFactory"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Qilin/QilinERC20.sol": {
+			"keccak256": "0xcf03a2fa2893a9c52dd8cd59a2752e47a5da36187a4f1ef874a6454f44748d07",
+			"urls": [
+				"bzz-raw://f37000e7d69ff56771224dd0df2dcee6ec17e1cb930d839ba27764e93f42ca08",
+				"dweb:/ipfs/QmYB3i1sTFNzbf245RV51iqrLPrDpKkqHuQqGjaWwe7LaD"
+			]
+		},
+		"Qilin/Qilin_Factory.sol": {
+			"keccak256": "0x795743c1c8208e4fd9a74d7ce8778eb7eb7dbc29c2ce5dc398f3e2a5be01049d",
+			"urls": [
+				"bzz-raw://e0cab125814d06788175a75b31eda35029709f1dbb38a8ff1525551c2204ef6f",
+				"dweb:/ipfs/QmYciQr5MRcGgeR3D4PXxFjSij798QE9A6VJgvaq8ukfDc"
+			]
+		},
+		"Qilin/Qilin_Pool.sol": {
+			"keccak256": "0x1bdcfd5160ebac5e4d32c3c3d8097ddec5d94a5c9b4f954c789ba5477a230d29",
+			"urls": [
+				"bzz-raw://6285958da1db341e6c7080694e49a98f7593237e24843822511a5780d3116233",
+				"dweb:/ipfs/QmbT6CuLEgVTLNfyvukYTrpcm4UwAPh1Vvq5p5ZZkFTgCR"
+			]
+		},
+		"Qilin/interface/IERC20.sol": {
+			"keccak256": "0x41d78140d76d3f4b6527cbb8657b4fcac125c5dbe4cc5228ad78369e7630e310",
+			"urls": [
+				"bzz-raw://a4970e871a091f06cce6b62d527b10d262f05d6e45161f5c59abfaad16691875",
+				"dweb:/ipfs/QmZ3YFz8WtfLJfQCswbfoQwHRNieo9fgSSzJkdq2XrtdSm"
+			]
+		},
+		"Qilin/interface/IQilinERC20.sol": {
+			"keccak256": "0x7be71c5b3f764f71319092ca8d8b416d9b977943369b3727b0659109e5e0e3a6",
+			"urls": [
+				"bzz-raw://6316ef912010835844a51977850dd6efbd142ef66273caf8abd70b197900959f",
+				"dweb:/ipfs/QmdgQbwyf9KARi7pXr6yxu5YRdDcvvSevqZrqFPjZrXjSd"
+			]
+		},
+		"Qilin/interface/IQilin_Callee.sol": {
+			"keccak256": "0xb465ade55da0ed667c49e78bc701c2f0b8e46da31a32b691b807865bfeef1212",
+			"urls": [
+				"bzz-raw://1cbc66ca5fb737544436bbab8f4781022401fb6b99e4c008862f9de3df0eb3bc",
+				"dweb:/ipfs/QmekPSoyYhsJaLbsNiYjZE92npVQBPN3zDmGc8FYAjvmws"
+			]
+		},
+		"Qilin/interface/IQilin_Factory.sol": {
+			"keccak256": "0x4739c99a16a779bb6ca42432fdd9e67c99fe38ba81935649e9109ca27fcb090f",
+			"urls": [
+				"bzz-raw://1017371a421e5617d1e895514d288bb5f999ee41dc32b55d8663c04626034267",
+				"dweb:/ipfs/QmTxDh1em4Z1c6aGBBPo4LDT6CtADR6QsfEU8dUodKBnbL"
+			]
+		},
+		"Qilin/interface/IQilin_Pool.sol": {
+			"keccak256": "0xee111c30e88324c8fbf475b239cfecb01c25b40a249f33fbcbe9c670035cb5d9",
+			"urls": [
+				"bzz-raw://8b056f233362db5251061c633d2cd725ed53a7eaadc605d5a6d1f9297ea64a41",
+				"dweb:/ipfs/QmQqZBvJ3qdxZgSfcWDi3L6Me3BH1mC4gRRuZ3gohrTpLF"
+			]
+		},
+		"Qilin/libraries/Math.sol": {
+			"keccak256": "0xd753f25df3382a98b64e9df24ed1259ad2f59e9d737390b16f49889876a98120",
+			"urls": [
+				"bzz-raw://c8dc53d76461f0394cd2b0fa0a43e4b31a9c013e5d707df5b84eab4962fc728a",
+				"dweb:/ipfs/Qmc1baid2KNN2ySDMwvc9AJCDMcwKJjeeP8Y89EMj1LMNR"
+			]
+		},
+		"Qilin/libraries/Safemath.sol": {
+			"keccak256": "0xe92f3aa56d7863251bb6106fff4008c0ff5ad7a9f34e1c143d48f9f1be06f94c",
+			"urls": [
+				"bzz-raw://ee22aea0f6fae65466bc63a495dd4e515360492d09d770541019bfe0a4571817",
+				"dweb:/ipfs/QmTqp2bWB4b5tQGD9bLZhgsYbXyx7xZCn3Vh7Vutiz34dg"
+			]
+		}
+	},
+	"version": 1
+}
